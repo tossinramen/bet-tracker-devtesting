@@ -122,7 +122,7 @@ class HistoryPaginator(ui.View):
         embed = discord.Embed(title=f"📋 Bet History: {self.user_name}", color=discord.Color.red())
         
         for i, b in enumerate(page_bets, start + 1):
-            status_emoji = "⏳" if b['status'] == "Pending" else ("✅" if b['status'] == "Win" else "❌")
+            status_emoji = "⏳" if b['status'] == "Pending" else ("✅" if b['status'] == "Win" else "❌" if b['status'] == "Loss" else "⏹️")
             
             profit_val = float(b.get('profit', 0.0))
             result_str = f"+{profit_val}u" if b['status'] == "Win" else f"{profit_val}u" if b['status'] == "Loss" else "0.0u"
@@ -133,7 +133,7 @@ class HistoryPaginator(ui.View):
             embed.add_field(
                 name=f"Bet #{i} - {status_emoji} {b['status']}", 
                 value=(
-                    f"**Match:** `{b['match']}`\n"
+                    f"**Pick:** `{b['match']}`\n"
                     f"**Wager:** `{b['units']}u`\n"
                     f"**Odds:** `{display_odds}`\n"
                     f"**Result:** `{result_str}`\n"
@@ -202,7 +202,7 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
 @bot.event
 async def on_raw_reaction_add(payload):
     if payload.user_id == bot.user.id: return
-    if str(payload.emoji) not in ["✅", "❌"]: return
+    if str(payload.emoji) not in ["✅", "❌", "⏹️"]: return
 
     channel = bot.get_channel(payload.channel_id) or await bot.fetch_channel(payload.channel_id)
     message = await channel.fetch_message(payload.message_id)
@@ -220,9 +220,12 @@ async def on_raw_reaction_add(payload):
                         if str(payload.emoji) == "✅":
                             b["status"] = "Win"
                             b["profit"] = round((float(b["units"]) * float(b["odds"])) - float(b["units"]), 2)
-                        else:
+                        elif str(payload.emoji) == "❌":
                             b["status"] = "Loss"
                             b["profit"] = -float(b["units"])
+                        elif str(payload.emoji) == "⏹️":
+                            b["status"] = "Void"
+                            b["profit"] = 0.0
                         
                         save_data(data)
                         name = payload.member.display_name if payload.member else "User"
@@ -307,7 +310,7 @@ async def history(interaction: discord.Interaction):
 @bot.tree.command(name="help", description="List commands")
 async def help(interaction: discord.Interaction):
     embed = discord.Embed(title="🎲 Bet Tracker Help", color=discord.Color.red())
-    embed.add_field(name="📝 `/bet`", value="Track a bet. React with ✅/❌.", inline=False)
+    embed.add_field(name="📝 `/bet`", value="Track a bet. React with ✅ (Win), ❌ (Loss), or ⏹️ (Void).", inline=False)
     embed.add_field(name="💰 `/pnl`", value="Check your stats.", inline=False)
     embed.add_field(name="📋 `/history`", value="View your bets.", inline=False)
     embed.add_field(name="🏆 `/leaderboard`", value="See rankings.", inline=False)

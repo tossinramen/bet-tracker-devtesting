@@ -79,6 +79,26 @@
             "status": "Pending",
             "profit": 0.0,
             "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "204bef78",
+            "match": "G2 ML",
+            "units": 2.0,
+            "odds": 1.9,
+            "original_odds": 1.9,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "aba8e05e",
+            "match": "Falcons ML",
+            "units": 1.0,
+            "odds": 1.9,
+            "original_odds": 1.9,
+            "status": "Win",
+            "profit": 0.9,
+            "user_name": "tahjoker"
         }
     ]
 }

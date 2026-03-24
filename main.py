@@ -17,12 +17,42 @@ DATA_FILE = "bets.json"
 
 # --- DATA HELPERS ---
 def convert_to_decimal(odds_input: float) -> float:
+    # If odds are between -100 and 100, assume they are already Decimal
+    if -100 < odds_input < 100:
+        return round(odds_input, 2)
+    # American Positive (e.g., +220)
     if odds_input >= 100:  
         return round((odds_input / 100) + 1, 2)
-    elif odds_input <= -100:  
+    # American Negative (e.g., -110)
+    if odds_input <= -100:  
         return round((100 / abs(odds_input)) + 1, 2)
-    else:
-        return round(odds_input, 2) 
+    return round(odds_input, 2) 
+
+def format_odds(odds_input: float) -> str:
+    decimal = convert_to_decimal(odds_input)
+    
+    # If the input was a Decimal (e.g., 1.9), show it clearly
+    if -100 < odds_input < 100:
+        # Calculate what the American equivalent WOULD be for the label
+        if odds_input >= 2.0:
+            ame = int((odds_input - 1) * 100)
+            return f"{odds_input} (+{ame})"
+        elif odds_input > 1.0:
+            ame = int(-100 / (odds_input - 1))
+            return f"{odds_input} ({ame})"
+        else:
+            return f"{odds_input}" # For sub-1.0 odds (rare)
+
+    # If the input was American (e.g., 220 or -110)
+    sign = "+" if odds_input > 0 else ""
+    return f"{decimal} ({sign}{int(odds_input)})"
+    
+def format_odds(american_odds: float) -> str:
+    decimal = convert_to_decimal(american_odds)
+    # Convert to int to remove .0, then add + if positive
+    sign = "+" if american_odds > 0 else ""
+    return f"{decimal} ({sign}{int(american_odds)})"
+
 
 def get_data():
     if os.path.exists(DATA_FILE):
@@ -99,16 +129,18 @@ class HistoryPaginator(ui.View):
         for i, b in enumerate(page_bets, start + 1):
             status_emoji = "⏳" if b['status'] == "Pending" else ("✅" if b['status'] == "Win" else "❌")
             
-            # FIXED: Ensure profit is treated as a float for the display
             profit_val = float(b.get('profit', 0.0))
             result_str = f"+{profit_val}u" if b['status'] == "Win" else f"{profit_val}u" if b['status'] == "Loss" else "0.0u"
+
+            # UPDATED: Use the formatted display odds for history too
+            display_odds = format_odds(b.get('original_odds', 0))
 
             embed.add_field(
                 name=f"Bet #{i} - {status_emoji} {b['status']}", 
                 value=(
                     f"**Match:** `{b['match']}`\n"
                     f"**Wager:** `{b['units']}u`\n"
-                    f"**Odds:** `{b.get('original_odds', b['odds'])}`\n"
+                    f"**Odds:** `{display_odds}`\n"
                     f"**Result:** `{result_str}`\n"
                     f"**ID:** `{b['bet_id']}`"
                 ), 
@@ -147,6 +179,8 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
     user_key = f"{guild_id}_{user_id}"
     bet_id = str(uuid.uuid4())[:8]
     decimal_odds = convert_to_decimal(odds)
+    
+    display_odds = format_odds(odds)
 
     data = get_data()
     if user_key not in data: data[user_key] = []
@@ -164,7 +198,8 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
     embed.set_thumbnail(url="attachment://spongebob.jfif")
     embed.add_field(name="🏆 EVENT", value=f"`{match}`", inline=False)
     embed.add_field(name="💰 WAGER", value=f"`{units} units`", inline=True)
-    embed.add_field(name="📈 ODDS", value=f"`{odds}`", inline=True)
+    
+    embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
     embed.set_footer(text=f"ID: {bet_id} • Status: PENDING")
 
     await interaction.response.send_message(file=file, embed=embed)

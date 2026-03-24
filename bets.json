@@ -1,0 +1,44 @@
+{
+    "1485941195128701082_213114196060143618": [
+        {
+            "bet_id": "4ddc65a4",
+            "match": "G2 ML",
+            "units": 1.0,
+            "odds": 3.2,
+            "original_odds": 220.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "8115c866",
+            "match": "T1 ML",
+            "units": 1.0,
+            "odds": 1.83,
+            "original_odds": -120.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "f6cdc032",
+            "match": "G2 ML",
+            "units": 1.0,
+            "odds": 3.2,
+            "original_odds": 220.0,
+            "status": "Win",
+            "profit": 2.2,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "e928e6bf",
+            "match": "T1 ML",
+            "units": 2.2,
+            "odds": 1.9,
+            "original_odds": 1.9,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        }
+    ]
+}

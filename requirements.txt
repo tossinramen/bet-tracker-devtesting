@@ -1,6 +1,2 @@
-.env
-*.key
-
-
-
-
+discord.py
+python-dotenv

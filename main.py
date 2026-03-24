@@ -29,29 +29,23 @@ def convert_to_decimal(odds_input: float) -> float:
     return round(odds_input, 2) 
 
 def format_odds(odds_input: float) -> str:
-    decimal = convert_to_decimal(odds_input)
-    
-    # If the input was a Decimal (e.g., 1.9), show it clearly
+    # 1. Handle Decimal Odds (anything between -100 and 100)
     if -100 < odds_input < 100:
-        # Calculate what the American equivalent WOULD be for the label
+        if odds_input <= 1.0:
+            return f"{odds_input}" # Avoid division by zero
+        
+        # Calculate American equivalent for the label
         if odds_input >= 2.0:
             ame = int((odds_input - 1) * 100)
             return f"{odds_input} (+{ame})"
-        elif odds_input > 1.0:
+        else:
             ame = int(-100 / (odds_input - 1))
             return f"{odds_input} ({ame})"
-        else:
-            return f"{odds_input}" # For sub-1.0 odds (rare)
 
-    # If the input was American (e.g., 220 or -110)
+    # 2. Handle American Odds (anything >= 100 or <= -100)
+    decimal = convert_to_decimal(odds_input)
     sign = "+" if odds_input > 0 else ""
     return f"{decimal} ({sign}{int(odds_input)})"
-    
-def format_odds(american_odds: float) -> str:
-    decimal = convert_to_decimal(american_odds)
-    # Convert to int to remove .0, then add + if positive
-    sign = "+" if american_odds > 0 else ""
-    return f"{decimal} ({sign}{int(american_odds)})"
 
 
 def get_data():

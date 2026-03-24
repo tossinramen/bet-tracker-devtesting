@@ -119,6 +119,26 @@
             "status": "Pending",
             "profit": 0.0,
             "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "b526548e",
+            "match": "FPX ML",
+            "units": 200.0,
+            "odds": 1.09,
+            "original_odds": 1.09,
+            "status": "Win",
+            "profit": 18.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "02f8c13b",
+            "match": "G2 ML",
+            "units": 2.0,
+            "odds": 2.0,
+            "original_odds": 2.0,
+            "status": "Cashed Out",
+            "profit": 1.0,
+            "user_name": "tahjoker"
         }
     ],
     "1485941195128701082_469312558709342208": [

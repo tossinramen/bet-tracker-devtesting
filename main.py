@@ -87,9 +87,8 @@ class LeaderboardPaginator(ui.View):
             medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"**#{i}**"
             pnl_display = f"+{user['pnl']}u" if user['pnl'] > 0 else f"{user['pnl']}u"
             
-            # Formatting the extra stats into a clean line
+            # This restores the sub-line with Winrate and ROI
             stats_line = f"`{user['record']}` | `{user['winrate']}%` | `{user['roi']}% ROI`"
-            
             leaderboard_text += f"{medal} **{user['name']}**: **{pnl_display}**\n╰ {stats_line}\n"
         
         embed.add_field(name="Rankings", value=leaderboard_text or "No data for this page.", inline=False)
@@ -125,7 +124,7 @@ class HistoryPaginator(ui.View):
         embed = discord.Embed(title=f"📋 Bet History: {self.user_name}", color=discord.Color.red())
         
         for i, b in enumerate(page_bets, start + 1):
-            status_emoji = "⏳" if b['status'] == "Pending" else ("✅" if b['status'] == "Win" else "❌" if b['status'] == "Loss" else "⏹️")
+            status_emoji = "⏳" if b['status'] == "Pending" else ("✅" if b['status'] == "Win" else "❌" if b['status'] == "Loss" else "⏹️" if b['status'] == "Void" else "💰")
             
             profit_val = float(b.get('profit', 0.0))
             result_str = f"+{profit_val}u" if b['status'] == "Win" else f"{profit_val}u" if b['status'] == "Loss" else "0.0u"
@@ -173,6 +172,7 @@ bot = MyBot()
 
 @bot.tree.command(name="bet", description="Track a new bet")
 async def bet(interaction: discord.Interaction, match: str, units: float, odds: float):
+    await interaction.response.defer()
     user_id, guild_id = str(interaction.user.id), str(interaction.guild.id)
     user_key = f"{guild_id}_{user_id}"
     bet_id = str(uuid.uuid4())[:8]
@@ -200,7 +200,7 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
     embed.set_footer(text=f"ID: {bet_id}")
 
-    await interaction.response.send_message(file=file, embed=embed)
+    await interaction.followup.send(file=file, embed=embed)
 
 @bot.event
 async def on_raw_reaction_add(payload):
@@ -263,15 +263,14 @@ async def pnl(interaction: discord.Interaction):
     user_key = f"{interaction.guild.id}_{interaction.user.id}"
     user_bets = data.get(user_key, [])
     
-    # FIXED: Filter out the bet_id string before summing
-    total_pnl = round(sum(float(b["profit"]) for b in user_bets if isinstance(b.get("profit"), (int, float))), 2)
+    total_pnl = round(sum(float(b["profit"]) for b in user_bets), 2)
     wins = len([b for b in user_bets if b.get("status") == "Win"])
     losses = len([b for b in user_bets if b.get("status") == "Loss"])
+    cov = len([b for b in user_bets if b.get("status") in ["Cashed Out", "Void"]])
     
-    color = discord.Color.red() 
-    embed = discord.Embed(title=f"💰 PnL Report: {interaction.user.display_name}", color=color)
+    embed = discord.Embed(title=f"💰 PnL Report: {interaction.user.display_name}", color=discord.Color.red())
     embed.add_field(name="Total Profit/Loss", value=f"**{total_pnl} units**", inline=False)
-    embed.add_field(name="Record", value=f"{wins}W - {losses}L", inline=True)
+    embed.add_field(name="Record", value=f"`{wins}W - {losses}L - {cov}CO/V`", inline=True)
     await interaction.response.send_message(embed=embed)
 
 @bot.tree.command(name="leaderboard", description="Show top bettors")
@@ -282,30 +281,25 @@ async def leaderboard(interaction: discord.Interaction):
     
     for key, user_bets in data.items():
         if key.startswith(f"{guild_id}_"):
-            # SAFETY CHECK: Skip users with no bets to prevent IndexError
-            if not user_bets:
-                continue
+            if not user_bets: continue
                 
-            # Calculate PnL
             total_pnl = round(sum(float(b["profit"]) for b in user_bets), 2)
-            
-            # Calculate Record (Wins/Losses)
             wins = len([b for b in user_bets if b.get("status") == "Win"])
             losses = len([b for b in user_bets if b.get("status") == "Loss"])
-            total_settled = wins + losses
             
-            # Calculate Winrate
+            # Math for WR and ROI
+            total_settled = wins + losses
             winrate = round((wins / total_settled) * 100, 1) if total_settled > 0 else 0
             
-            # Calculate ROI (Profit / Total Risked)
-            total_staked = sum(float(b["units"]) for b in user_bets if b.get("status") in ["Win", "Loss"])
+            # ROI includes Cashed Out bets in the stake calculation
+            total_staked = sum(float(b["units"]) for b in user_bets if b.get("status") in ["Win", "Loss", "Cashed Out"])
             roi = round((total_pnl / total_staked) * 100, 1) if total_staked > 0 else 0
             
             user_name = user_bets[0].get("user_name", "Unknown User")
             server_stats.append({
                 "name": user_name, 
                 "pnl": total_pnl, 
-                "record": f"{wins}W-{losses}L",
+                "record": f"{wins}W-{losses}L", # Simplified Record
                 "winrate": winrate,
                 "roi": roi
             })
@@ -313,9 +307,7 @@ async def leaderboard(interaction: discord.Interaction):
     if not server_stats:
         return await interaction.response.send_message("No bets recorded.", ephemeral=True)
 
-    # Sort by PnL (Highest to Lowest)
     server_stats.sort(key=lambda x: x["pnl"], reverse=True)
-    
     view = LeaderboardPaginator(server_stats, interaction.guild.name)
     await interaction.response.send_message(embed=view.create_embed(), view=view)
     view.message = await interaction.original_response()
@@ -418,6 +410,42 @@ async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str,
     embed.set_footer(text=f"ID: {bet_id}")
 
     await interaction.response.send_message(content=f"✅ Bet `{bet_id}` updated!", file=file, embed=embed)
+
+@bot.tree.command(name="cashout", description="Settle a bet early via payout amount or specific odds")
+async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: float = None, cashout_odds: float = None):
+    user_key = f"{interaction.guild.id}_{interaction.user.id}"
+    data = get_data()
+    
+    if user_key not in data:
+        return await interaction.response.send_message("No history found.", ephemeral=True)
+    
+    bet_to_pull = next((b for b in data[user_key] if b['bet_id'] == bet_id), None)
+    if not bet_to_pull:
+        return await interaction.response.send_message(f"Bet ID `{bet_id}` not found.", ephemeral=True)
+
+    original_stake = float(bet_to_pull["units"])
+    
+    if payout_amount is not None:
+        actual_profit = round(payout_amount - original_stake, 2)
+        display_val = f"{payout_amount}u Payout"
+    elif cashout_odds is not None:
+        actual_profit = round((original_stake * cashout_odds) - original_stake, 2)
+        display_val = f"{cashout_odds} Odds"
+    else:
+        return await interaction.response.send_message("Please provide either `payout_amount` or `cashout_odds`.", ephemeral=True)
+
+    bet_to_pull["status"] = "Cashed Out"
+    bet_to_pull["profit"] = actual_profit
+    save_data(data)
+
+    color = discord.Color.blue() if actual_profit >= 0 else discord.Color.orange()
+    embed = discord.Embed(title="💰 BET CASHED OUT", color=color)
+    embed.add_field(name="Event", value=f"`{bet_to_pull['match']}`", inline=False)
+    embed.add_field(name="Method", value=f"`{display_val}`", inline=True)
+    embed.add_field(name="Resulting P/L", value=f"**{'+' if actual_profit > 0 else ''}{actual_profit}u**", inline=True)
+    embed.set_footer(text=f"ID: {bet_id}")
+    
+    await interaction.response.send_message(embed=embed)
 
 
 @bot.tree.command(name="help", description="List commands")

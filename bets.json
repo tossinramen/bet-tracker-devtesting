@@ -99,6 +99,16 @@
             "status": "Win",
             "profit": 0.9,
             "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "9c1f944b",
+            "match": "G2 ML",
+            "units": 1.9,
+            "odds": 2.2,
+            "original_odds": 2.2,
+            "status": "Void",
+            "profit": 0.0,
+            "user_name": "tahjoker"
         }
     ]
 }

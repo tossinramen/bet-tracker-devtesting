@@ -69,7 +69,7 @@ class LeaderboardPaginator(ui.View):
         self.guild_name = guild_name
         self.current_page = 0
         self.per_page = 10 
-        self.message = None # Added this to track the message
+        self.message = None 
 
     def create_embed(self):
         start = self.current_page * self.per_page
@@ -210,7 +210,7 @@ async def on_raw_reaction_add(payload):
     if message.embeds and message.embeds[0].footer.text:
         footer_text = message.embeds[0].footer.text
         if "ID: " in footer_text:
-            bet_id = footer_text.split("ID: ")[1].split(" •")[0]
+            bet_id = footer_text.split("ID: ")[1].strip()
             user_key = f"{payload.guild_id}_{payload.user_id}"
             data = get_data()
 
@@ -288,32 +288,71 @@ async def leaderboard(interaction: discord.Interaction):
 
     server_stats.sort(key=lambda x: x["pnl"], reverse=True)
     
-    # --- UPDATED SECTION ---
+    
     view = LeaderboardPaginator(server_stats, interaction.guild.name)
     await interaction.response.send_message(embed=view.create_embed(), view=view)
     view.message = await interaction.original_response() 
 
-@bot.tree.command(name="history", description="Show your full bet history")
-async def history(interaction: discord.Interaction):
+@bot.tree.command(name="history", description="Show a user's bet history")
+async def history(interaction: discord.Interaction, user: discord.Member = None):
+    # Use specified user, otherwise default to the person who ran the command
+    target_user = user or interaction.user
+    
     data = get_data()
-    user_key = f"{interaction.guild.id}_{interaction.user.id}"
+    user_key = f"{interaction.guild.id}_{target_user.id}"
     user_bets = data.get(user_key, [])
 
     if not user_bets:
-        await interaction.response.send_message("No bets recorded for you in this server.", ephemeral=True)
+        await interaction.response.send_message(f"No bets recorded for {target_user.display_name} in this server.", ephemeral=True)
         return
 
-    
-    view = HistoryPaginator(user_bets, interaction.user.display_name)
+    view = HistoryPaginator(user_bets, target_user.display_name)
     await interaction.response.send_message(embed=view.create_embed(), view=view)
+    # Anchor the view so pagination buttons work
+    view.message = await interaction.original_response()
+
+
+
+@bot.tree.command(name="removebet", description="Delete a bet from your history using its ID")
+async def removebet(interaction: discord.Interaction, bet_id: str):
+    user_key = f"{interaction.guild.id}_{interaction.user.id}"
+    data = get_data()
+    
+    if user_key not in data:
+        return await interaction.response.send_message("You have no bet history.", ephemeral=True)
+    
+ 
+    original_list = data[user_key]
+    new_list = [b for b in original_list if b['bet_id'] != bet_id]
+    
+    if len(original_list) == len(new_list):
+        return await interaction.response.send_message(f"Could not find a bet with ID: `{bet_id}`", ephemeral=True)
+  
+    data[user_key] = new_list
+    save_data(data)
+    
+    await interaction.response.send_message(f"✅ Bet `{bet_id}` has been removed from your history.", ephemeral=True)
+
+
+    try:
+        async for message in interaction.channel.history(limit=100):
+            if message.author == bot.user and message.embeds:
+                footer = message.embeds[0].footer.text
+                if footer and bet_id in footer:
+                    await message.delete()
+                    break 
+    except Exception:
+        pass 
+
 
 @bot.tree.command(name="help", description="List commands")
 async def help(interaction: discord.Interaction):
     embed = discord.Embed(title="🎲 Bet Tracker Help", color=discord.Color.red())
     embed.add_field(name="📝 `/bet`", value="Track a bet. React with ✅ (Win), ❌ (Loss), or ⏹️ (Void).", inline=False)
     embed.add_field(name="💰 `/pnl`", value="Check your stats.", inline=False)
-    embed.add_field(name="📋 `/history`", value="View your bets.", inline=False)
+    embed.add_field(name="📋 `/history`", value="View your bets or @user's bets.", inline=False)    
     embed.add_field(name="🏆 `/leaderboard`", value="See rankings.", inline=False)
+    embed.add_field(name="🗑️ `/removebet`", value="Delete a bet using its ID.", inline=False)
     await interaction.response.send_message(embed=embed)
 
 bot.run(token)

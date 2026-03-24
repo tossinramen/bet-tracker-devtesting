@@ -205,7 +205,10 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
 @bot.event
 async def on_raw_reaction_add(payload):
     if payload.user_id == bot.user.id: return
-    if str(payload.emoji) not in ["✅", "❌", "⏹️"]: return
+    
+    # 1. Added 💩 to the allowed list
+    emoji = str(payload.emoji)
+    if emoji not in ["✅", "❌", "⏹️", "💩"]: return
 
     channel = bot.get_channel(payload.channel_id) or await bot.fetch_channel(payload.channel_id)
     message = await channel.fetch_message(payload.message_id)
@@ -218,17 +221,25 @@ async def on_raw_reaction_add(payload):
             data = get_data()
 
             if user_key in data:
+                # SPECIAL CASE: The Poop emoji deletes the bet entirely
+                if emoji == "💩":
+                    data[user_key] = [b for b in data[user_key] if b["bet_id"] != bet_id]
+                    # Clean up empty users to keep the file small
+                    if not data[user_key]: del data[user_key]
+                    save_data(data)
+                    await message.delete() # Delete the slip
+                    await channel.send(f"🗑️ Bet `{bet_id}` has been deleted.", delete_after=3)
+                    return
+
+                # Normal settlement logic for other emojis
                 for b in data[user_key]:
                     if b["bet_id"] == bet_id:
-                        if str(payload.emoji) == "✅":
-                            b["status"] = "Win"
-                            b["profit"] = round((float(b["units"]) * float(b["odds"])) - float(b["units"]), 2)
-                        elif str(payload.emoji) == "❌":
-                            b["status"] = "Loss"
-                            b["profit"] = -float(b["units"])
-                        elif str(payload.emoji) == "⏹️":
-                            b["status"] = "Void"
-                            b["profit"] = 0.0
+                        if emoji == "✅":
+                            b["status"], b["profit"] = "Win", round((float(b["units"]) * float(b["odds"])) - float(b["units"]), 2)
+                        elif emoji == "❌":
+                            b["status"], b["profit"] = "Loss", -float(b["units"])
+                        elif emoji == "⏹️":
+                            b["status"], b["profit"] = "Void", 0.0
                         
                         save_data(data)
                         name = payload.member.display_name if payload.member else "User"
@@ -451,7 +462,7 @@ async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: 
 @bot.tree.command(name="help", description="List commands")
 async def help(interaction: discord.Interaction):
     embed = discord.Embed(title="🎲 Bet Tracker Help", color=discord.Color.red())
-    embed.add_field(name="📝 `/bet`", value="Track a bet. React with ✅ (Win), ❌ (Loss), or ⏹️ (Void).", inline=False)
+    embed.add_field(name="📝 `/bet`", value="Track a bet. React with ✅ (Win), ❌ (Loss), ⏹️ (Void), or 💩 (Delete).", inline=False)
     embed.add_field(name="💰 `/pnl`", value="Check your stats.", inline=False)
     embed.add_field(name="📋 `/history`", value="View your bets or @user's bets.", inline=False)    
     embed.add_field(name="🏆 `/leaderboard`", value="See rankings.", inline=False)

@@ -85,9 +85,12 @@ class LeaderboardPaginator(ui.View):
         leaderboard_text = ""
         for i, user in enumerate(page_stats, start + 1):
             medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"**#{i}**"
-            pnl_val = user['pnl']
-            pnl_display = f"+{pnl_val}u" if pnl_val > 0 else f"{pnl_val}u"
-            leaderboard_text += f"{medal} **{user['name']}**: `{pnl_display}`\n"
+            pnl_display = f"+{user['pnl']}u" if user['pnl'] > 0 else f"{user['pnl']}u"
+            
+            # Formatting the extra stats into a clean line
+            stats_line = f"`{user['record']}` | `{user['winrate']}%` | `{user['roi']}% ROI`"
+            
+            leaderboard_text += f"{medal} **{user['name']}**: **{pnl_display}**\n╰ {stats_line}\n"
         
         embed.add_field(name="Rankings", value=leaderboard_text or "No data for this page.", inline=False)
         total_pages = (len(self.stats) - 1) // self.per_page + 1
@@ -241,7 +244,7 @@ async def on_raw_reaction_remove(payload):
     if message.embeds and message.embeds[0].footer.text:
         footer_text = message.embeds[0].footer.text
         if "ID: " in footer_text:
-            bet_id = footer_text.split("ID: ")[1].split(" •")[0]
+            bet_id = footer_text.split("ID: ")[1].strip()
             user_key = f"{payload.guild_id}_{payload.user_id}"
             data = get_data()
 
@@ -279,19 +282,43 @@ async def leaderboard(interaction: discord.Interaction):
     
     for key, user_bets in data.items():
         if key.startswith(f"{guild_id}_"):
-            total_pnl = round(sum(float(b["profit"]) for b in user_bets if isinstance(b.get("profit"), (int, float))), 2)
+            # SAFETY CHECK: Skip users with no bets to prevent IndexError
+            if not user_bets:
+                continue
+                
+            # Calculate PnL
+            total_pnl = round(sum(float(b["profit"]) for b in user_bets), 2)
+            
+            # Calculate Record (Wins/Losses)
+            wins = len([b for b in user_bets if b.get("status") == "Win"])
+            losses = len([b for b in user_bets if b.get("status") == "Loss"])
+            total_settled = wins + losses
+            
+            # Calculate Winrate
+            winrate = round((wins / total_settled) * 100, 1) if total_settled > 0 else 0
+            
+            # Calculate ROI (Profit / Total Risked)
+            total_staked = sum(float(b["units"]) for b in user_bets if b.get("status") in ["Win", "Loss"])
+            roi = round((total_pnl / total_staked) * 100, 1) if total_staked > 0 else 0
+            
             user_name = user_bets[0].get("user_name", "Unknown User")
-            server_stats.append({"name": user_name, "pnl": total_pnl})
+            server_stats.append({
+                "name": user_name, 
+                "pnl": total_pnl, 
+                "record": f"{wins}W-{losses}L",
+                "winrate": winrate,
+                "roi": roi
+            })
     
     if not server_stats:
         return await interaction.response.send_message("No bets recorded.", ephemeral=True)
 
+    # Sort by PnL (Highest to Lowest)
     server_stats.sort(key=lambda x: x["pnl"], reverse=True)
-    
     
     view = LeaderboardPaginator(server_stats, interaction.guild.name)
     await interaction.response.send_message(embed=view.create_embed(), view=view)
-    view.message = await interaction.original_response() 
+    view.message = await interaction.original_response()
 
 @bot.tree.command(name="history", description="Show a user's bet history")
 async def history(interaction: discord.Interaction, user: discord.Member = None):
@@ -344,6 +371,54 @@ async def removebet(interaction: discord.Interaction, bet_id: str):
     except Exception:
         pass 
 
+@bot.tree.command(name="editbet", description="Edit an existing bet's details using its ID")
+async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: float, new_odds: float):
+    user_key = f"{interaction.guild.id}_{interaction.user.id}"
+    data = get_data()
+    
+    if user_key not in data:
+        return await interaction.response.send_message("You have no bet history.", ephemeral=True)
+    
+    bet_to_update = None
+    for b in data[user_key]:
+        if b['bet_id'] == bet_id:
+            bet_to_update = b
+            break
+            
+    if not bet_to_update:
+        return await interaction.response.send_message(f"Could not find a bet with ID: `{bet_id}`", ephemeral=True)
+
+    bet_to_update["match"] = new_match
+    bet_to_update["units"] = new_units
+    bet_to_update["original_odds"] = new_odds
+    bet_to_update["odds"] = convert_to_decimal(new_odds)
+    bet_to_update["status"] = "Pending"
+    bet_to_update["profit"] = 0.0
+    save_data(data)
+    
+    try:
+        async for message in interaction.channel.history(limit=100):
+            if message.author == bot.user and message.embeds:
+                footer = message.embeds[0].footer.text
+                if footer and bet_id in footer:
+                    await message.delete()
+                    break 
+    except Exception:
+        pass
+
+
+    display_odds = format_odds(new_odds)
+    file = discord.File("spongebob.jfif", filename="spongebob.jfif")
+    embed = discord.Embed(title="🎫 UPDATED BET SLIP", color=discord.Color.red(), timestamp=interaction.created_at)
+    embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+    embed.set_thumbnail(url="attachment://spongebob.jfif")
+    embed.add_field(name="🏆 EVENT", value=f"`{new_match}`", inline=False)
+    embed.add_field(name="💰 WAGER", value=f"`{new_units} units`", inline=True)
+    embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
+    embed.set_footer(text=f"ID: {bet_id}")
+
+    await interaction.response.send_message(content=f"✅ Bet `{bet_id}` updated!", file=file, embed=embed)
+
 
 @bot.tree.command(name="help", description="List commands")
 async def help(interaction: discord.Interaction):
@@ -353,6 +428,7 @@ async def help(interaction: discord.Interaction):
     embed.add_field(name="📋 `/history`", value="View your bets or @user's bets.", inline=False)    
     embed.add_field(name="🏆 `/leaderboard`", value="See rankings.", inline=False)
     embed.add_field(name="🗑️ `/removebet`", value="Delete a bet using its ID.", inline=False)
+    embed.add_field(name="✏️ `/editbet`", value="Fix a mistake on a bet using its ID.", inline=False)
     await interaction.response.send_message(embed=embed)
 
 bot.run(token)

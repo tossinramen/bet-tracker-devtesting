@@ -77,7 +77,7 @@ class LeaderboardPaginator(ui.View):
         
         embed = discord.Embed(
             title=f"🏆 {self.guild_name} Betting Leaderboard",
-            color=discord.Color.gold(),
+            color=discord.Color.red(),
             description="Ranked by total units won/lost."
         )
         
@@ -118,7 +118,7 @@ class HistoryPaginator(ui.View):
         end = start + self.per_page
         page_bets = self.bets[start:end]
         
-        embed = discord.Embed(title=f"📋 Bet History: {self.user_name}", color=discord.Color.blue())
+        embed = discord.Embed(title=f"📋 Bet History: {self.user_name}", color=discord.Color.red())
         
         for i, b in enumerate(page_bets, start + 1):
             status_emoji = "⏳" if b['status'] == "Pending" else ("✅" if b['status'] == "Win" else "❌")
@@ -187,7 +187,7 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
     save_data(data)
 
     file = discord.File("spongebob.jfif", filename="spongebob.jfif")
-    embed = discord.Embed(title="🎫 NEW BET SLIP", color=0x000000, timestamp=interaction.created_at)
+    embed = discord.Embed(title="🎫 NEW BET SLIP", color=discord.Color.red(), timestamp=interaction.created_at)
     embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
     embed.set_thumbnail(url="attachment://spongebob.jfif")
     embed.add_field(name="🏆 EVENT", value=f"`{match}`", inline=False)
@@ -261,7 +261,7 @@ async def pnl(interaction: discord.Interaction):
     wins = len([b for b in user_bets if b.get("status") == "Win"])
     losses = len([b for b in user_bets if b.get("status") == "Loss"])
     
-    color = discord.Color.green() if total_pnl >= 0 else discord.Color.red()
+    color = discord.Color.red() 
     embed = discord.Embed(title=f"💰 PnL Report: {interaction.user.display_name}", color=color)
     embed.add_field(name="Total Profit/Loss", value=f"**{total_pnl} units**", inline=False)
     embed.add_field(name="Record", value=f"{wins}W - {losses}L", inline=True)
@@ -303,7 +303,7 @@ async def history(interaction: discord.Interaction):
 
 @bot.tree.command(name="help", description="List commands")
 async def help(interaction: discord.Interaction):
-    embed = discord.Embed(title="🎲 Bet Tracker Help", color=discord.Color.gold())
+    embed = discord.Embed(title="🎲 Bet Tracker Help", color=discord.Color.red())
     embed.add_field(name="📝 `/bet`", value="Track a bet. React with ✅/❌.", inline=False)
     embed.add_field(name="💰 `/pnl`", value="Check your stats.", inline=False)
     embed.add_field(name="📋 `/history`", value="View your bets.", inline=False)

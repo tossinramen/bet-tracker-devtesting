@@ -69,6 +69,7 @@ class LeaderboardPaginator(ui.View):
         self.guild_name = guild_name
         self.current_page = 0
         self.per_page = 10 
+        self.message = None # Added this to track the message
 
     def create_embed(self):
         start = self.current_page * self.per_page
@@ -194,7 +195,7 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
     embed.add_field(name="💰 WAGER", value=f"`{units} units`", inline=True)
     
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
-    embed.set_footer(text=f"ID: {bet_id} • Status: PENDING")
+    embed.set_footer(text=f"ID: {bet_id}")
 
     await interaction.response.send_message(file=file, embed=embed)
 
@@ -275,7 +276,6 @@ async def leaderboard(interaction: discord.Interaction):
     
     for key, user_bets in data.items():
         if key.startswith(f"{guild_id}_"):
-            
             total_pnl = round(sum(float(b["profit"]) for b in user_bets if isinstance(b.get("profit"), (int, float))), 2)
             user_name = user_bets[0].get("user_name", "Unknown User")
             server_stats.append({"name": user_name, "pnl": total_pnl})
@@ -284,8 +284,11 @@ async def leaderboard(interaction: discord.Interaction):
         return await interaction.response.send_message("No bets recorded.", ephemeral=True)
 
     server_stats.sort(key=lambda x: x["pnl"], reverse=True)
+    
+    # --- UPDATED SECTION ---
     view = LeaderboardPaginator(server_stats, interaction.guild.name)
     await interaction.response.send_message(embed=view.create_embed(), view=view)
+    view.message = await interaction.original_response() 
 
 @bot.tree.command(name="history", description="Show your full bet history")
 async def history(interaction: discord.Interaction):

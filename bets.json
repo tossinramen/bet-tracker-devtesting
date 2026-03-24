@@ -69,6 +69,16 @@
             "status": "Pending",
             "profit": 0.0,
             "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "80fe7fc6",
+            "match": "G2 ML",
+            "units": 1.5,
+            "odds": 1.5,
+            "original_odds": 1.5,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
         }
     ]
 }

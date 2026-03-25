@@ -17,7 +17,7 @@ intents.reactions = True
 DATA_FILE = "bets.json"
 
 SPORTS_LIST = [
-    "LCS", "LEC", "LPL", "LCK", "APAC", "CBLOL", 
+    "LCS", "LEC", "LPL", "LCK", "APAC", "CBLOL", "League Int"
     "CS2", "Val", "Dota", "Tennis", "MMA", 
     "Cricket", "Baseball", "Soccer", "Hockey"
 ]

@@ -1,3 +1,5 @@
+import datetime
+
 import discord
 from discord import app_commands, ui
 from discord.app_commands import Choice, Range 
@@ -17,7 +19,8 @@ intents.reactions = True
 DATA_FILE = "bets.json"
 
 SPORTS_LIST = [
-    "LCS", "LEC", "LPL", "LCK", "APAC", "CBLOL", "League Int"
+    "LCS", "LEC", "LPL", "LCK", "APAC", "CBLOL", "League Int",
+    "Basketball",
     "CS2", "Val", "Dota", "Tennis", "MMA", 
     "Cricket", "Baseball", "Soccer", "Hockey"
 ]
@@ -94,7 +97,7 @@ class LeaderboardPaginator(ui.View):
             medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"**#{i}**"
             pnl_display = f"+{user['pnl']}u" if user['pnl'] > 0 else f"{user['pnl']}u"
             
-            # This restores the sub-line with Winrate and ROI
+           
             stats_line = f"`{user['record']}` | `{user['winrate']}%` | `{user['roi']}% ROI`"
             leaderboard_text += f"{medal} **{user['name']}**: **{pnl_display}**\n╰ {stats_line}\n"
         
@@ -121,7 +124,7 @@ class HistoryPaginator(ui.View):
         self.bets = bets
         self.user_name = user_name
         self.current_page = 0
-        self.per_page = 5
+        self.per_page = 5 
 
     def create_embed(self):
         start = self.current_page * self.per_page
@@ -131,20 +134,27 @@ class HistoryPaginator(ui.View):
         embed = discord.Embed(title=f"📋 Bet History: {self.user_name}", color=discord.Color.red())
         
         for i, b in enumerate(page_bets, start + 1):
-            status_emoji = "⏳" if b['status'] == "Pending" else ("✅" if b['status'] == "Win" else "❌" if b['status'] == "Loss" else "⏹️" if b['status'] == "Void" else "💰")
+            
+            status = b['status']
+            if status == "Win": emoji = "✅"
+            elif status == "Loss": emoji = "❌"
+            elif status == "Cashed Out": emoji = "💰"
+            elif status == "Void": emoji = "⏹️"
+            else: emoji = "⏳" # Pending
             
             profit_val = float(b.get('profit', 0.0))
-            result_str = f"+{profit_val}u" if b['status'] == "Win" else f"{profit_val}u" if b['status'] == "Loss" else "0.0u"
-
-           
-            display_odds = format_odds(b.get('original_odds', 0))
+            
+            if status == "Pending":
+                result_str = "---"
+            else:
+                result_str = f"{'+' if profit_val > 0 else ''}{profit_val}u"
 
             embed.add_field(
-                name=f"Bet #{i} - {status_emoji} {b['status']}", 
+                name=f"Bet #{i} - {emoji} {status}", 
                 value=(
-                    f"**Pick:** `{b['pick']}`\n"
+                    f"**Pick:** `{b.get('pick', 'Unknown')}`\n"
                     f"**Wager:** `{b['units']}u`\n"
-                    f"**Odds:** `{display_odds}`\n"
+                    f"**Odds:** `{b.get('original_odds', b['odds'])}`\n"
                     f"**Result:** `{result_str}`\n"
                     f"**ID:** `{b['bet_id']}`"
                 ), 
@@ -194,7 +204,7 @@ async def bet(interaction: discord.Interaction, sport: Choice[str], pick: str, u
     data[user_key].append({
         "bet_id": bet_id, "sport": sport.value, "pick": pick, "units": units, 
         "odds": decimal_odds, "original_odds": odds, "status": "Pending", 
-        "profit": 0.0, "user_name": interaction.user.display_name
+        "profit": 0.0, "user_name": interaction.user.display_name, "timestamp": datetime.datetime.now().isoformat()
     })
     save_data(data)
 
@@ -311,63 +321,150 @@ async def pnl(interaction: discord.Interaction):
     embed.add_field(name="Record", value=f"`{wins}W - {losses}L - {cov}CO/V`", inline=True)
     await interaction.response.send_message(embed=embed)
 
-@bot.tree.command(name="leaderboard", description="Show top bettors")
-async def leaderboard(interaction: discord.Interaction):
-    data = get_data()
-    guild_id = str(interaction.guild.id)
-    server_stats = []
-    
-    for key, user_bets in data.items():
-        if key.startswith(f"{guild_id}_"):
-            if not user_bets: continue
-                
-            total_pnl = round(sum(float(b["profit"]) for b in user_bets), 2)
-            wins = len([b for b in user_bets if b.get("status") == "Win"])
-            losses = len([b for b in user_bets if b.get("status") == "Loss"])
+class LeaderboardView(ui.View):
+    def __init__(self, all_data, guild_id, guild_name):
+        super().__init__(timeout=60)
+        self.all_data = all_data
+        self.guild_id = guild_id
+        self.guild_name = guild_name
+        self.current_page = 0
+        self.per_page = 10
+        self.timeframe = "All-Time"
+
+    def get_filtered_stats(self):
+        server_stats = []
+        now = datetime.datetime.now()
+
+        for key, user_bets in self.all_data.items():
+            if not key.startswith(f"{self.guild_id}_"): continue
             
-            # Math for WR and ROI
+            # Filter bets by timeframe
+            filtered_bets = []
+            for b in user_bets:
+                if self.timeframe == "All-Time":
+                    filtered_bets.append(b)
+                else:
+                    # Parse timestamp (handle old bets without timestamps as 'All-Time' only)
+                    if "timestamp" not in b: continue
+                    ts = datetime.datetime.fromisoformat(b["timestamp"])
+                    days_diff = (now - ts).days
+                    if self.timeframe == "Weekly" and days_diff <= 7:
+                        filtered_bets.append(b)
+                    elif self.timeframe == "Monthly" and days_diff <= 30:
+                        filtered_bets.append(b)
+
+            if not filtered_bets: continue
+
+            # Calculate stats for the filtered period
+            total_pnl = round(sum(float(b["profit"]) for b in filtered_bets), 2)
+            wins = len([b for b in filtered_bets if b.get("status") == "Win"])
+            losses = len([b for b in filtered_bets if b.get("status") == "Loss"])
+            total_staked = sum(float(b["units"]) for b in filtered_bets if b.get("status") in ["Win", "Loss", "Cashed Out"])
+            
             total_settled = wins + losses
             winrate = round((wins / total_settled) * 100, 1) if total_settled > 0 else 0
-            
-            # ROI includes Cashed Out bets in the stake calculation
-            total_staked = sum(float(b["units"]) for b in user_bets if b.get("status") in ["Win", "Loss", "Cashed Out"])
             roi = round((total_pnl / total_staked) * 100, 1) if total_staked > 0 else 0
             
-            user_name = user_bets[0].get("user_name", "Unknown User")
+            user_name = filtered_bets[0].get("user_name", "Unknown User")
             server_stats.append({
-                "name": user_name, 
-                "pnl": total_pnl, 
-                "record": f"{wins}W-{losses}L", # Simplified Record
-                "winrate": winrate,
-                "roi": roi
+                "name": user_name, "pnl": total_pnl, "record": f"{wins}W-{losses}L",
+                "winrate": winrate, "roi": roi
             })
+
+        server_stats.sort(key=lambda x: x["pnl"], reverse=True)
+        return server_stats
+
+    def create_embed(self):
+        stats = self.get_filtered_stats()
+        start = self.current_page * self.per_page
+        end = start + self.per_page
+        page_stats = stats[start:end]
+        
+        embed = discord.Embed(
+            title=f"🏆 {self.guild_name} Leaderboard ({self.timeframe})",
+            color=discord.Color.red(),
+            description=f"Showing rankings for **{self.timeframe.lower()}**."
+        )
+        
+        leaderboard_text = ""
+        for i, user in enumerate(page_stats, start + 1):
+            medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"**#{i}**"
+            pnl_display = f"+{user['pnl']}u" if user['pnl'] > 0 else f"{user['pnl']}u"
+            stats_line = f"`{user['record']}` | `{user['winrate']}%` | `{user['roi']}% ROI`"
+            leaderboard_text += f"{medal} **{user['name']}**: **{pnl_display}**\n╰ {stats_line}\n"
+        
+        embed.add_field(name="Rankings", value=leaderboard_text or "No data for this period.", inline=False)
+        total_pages = (len(stats) - 1) // self.per_page + 1
+        embed.set_footer(text=f"Page {self.current_page + 1} of {max(1, total_pages)}")
+        return embed
+
+    @ui.select(placeholder="Choose Timeframe", options=[
+        discord.SelectOption(label="All-Time", emoji="🌎"),
+        discord.SelectOption(label="Weekly", description="Last 7 days", emoji="📅"),
+        discord.SelectOption(label="Monthly", description="Last 30 days", emoji="🌙")
+    ])
+    async def select_timeframe(self, interaction: discord.Interaction, select: ui.Select):
+        self.timeframe = select.values[0]
+        self.current_page = 0
+        await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
+    @ui.button(label="⬅️", style=discord.ButtonStyle.gray)
+    async def previous(self, interaction: discord.Interaction, button: ui.Button):
+        if self.current_page > 0:
+            self.current_page -= 1
+            await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
+    @ui.button(label="➡️", style=discord.ButtonStyle.gray)
+    async def next(self, interaction: discord.Interaction, button: ui.Button):
+        stats = self.get_filtered_stats()
+        if (self.current_page + 1) * self.per_page < len(stats):
+            self.current_page += 1
+            await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
+@bot.tree.command(name="history", description="Show a user's bet history. Sorts by most recent.")
+@app_commands.describe(user="The user to view", sport="Filter by sport", status="Filter by result")
+@app_commands.choices(
+    sport=[Choice(name=s, value=s) for s in SPORTS_LIST],
+    status=[
+        Choice(name="Win", value="Win"),
+        Choice(name="Loss", value="Loss"),
+        Choice(name="Void", value="Void"),
+        Choice(name="Cashed Out", value="Cashed Out"),
+        Choice(name="Pending", value="Pending")
+    ]
+)
+async def history(interaction: discord.Interaction, user: discord.Member = None, sport: Choice[str] = None, status: Choice[str] = None):
+    await interaction.response.defer()
     
-    if not server_stats:
-        return await interaction.response.send_message("No bets recorded.", ephemeral=True)
-
-    server_stats.sort(key=lambda x: x["pnl"], reverse=True)
-    view = LeaderboardPaginator(server_stats, interaction.guild.name)
-    await interaction.response.send_message(embed=view.create_embed(), view=view)
-    view.message = await interaction.original_response()
-
-@bot.tree.command(name="history", description="Show a user's bet history")
-async def history(interaction: discord.Interaction, user: discord.Member = None):
     target_user = user or interaction.user
-    
     data = get_data()
     user_key = f"{interaction.guild.id}_{target_user.id}"
     user_bets = data.get(user_key, [])
 
     if not user_bets:
-        await interaction.response.send_message(f"No bets recorded for {target_user.display_name} in this server.", ephemeral=True)
-        return
+        return await interaction.followup.send(f"No bets recorded for {target_user.display_name}.", ephemeral=True)
 
-    view = HistoryPaginator(user_bets, target_user.display_name)
-    await interaction.response.send_message(embed=view.create_embed(), view=view)
-    # Anchor the view so pagination buttons work
-    view.message = await interaction.original_response()
+    
+    
+    display_bets = sorted(user_bets, key=lambda x: x.get('timestamp', ''), reverse=True)
 
+    
+    filter_parts = []
+    if sport:
+        display_bets = [b for b in display_bets if b.get('sport') == sport.value]
+        filter_parts.append(sport.value)
+    if status:
+        display_bets = [b for b in display_bets if b.get('status') == status.value]
+        filter_parts.append(status.value)
 
+    filter_text = f" ({', '.join(filter_parts)})" if filter_parts else ""
+
+    if not display_bets:
+        return await interaction.followup.send(f"No bets matching those filters found for {target_user.display_name}.", ephemeral=True)
+
+    view = HistoryPaginator(display_bets, f"{target_user.display_name}{filter_text}")
+    msg = await interaction.followup.send(embed=view.create_embed(), view=view)
+    view.message = msg
 
 @bot.tree.command(name="removebet", description="Delete a bet. Staff can delete anyone's bet.")
 async def removebet(interaction: discord.Interaction, bet_id: str, user: discord.Member = None):
@@ -528,8 +625,9 @@ async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: 
     else:
         return await interaction.response.send_message("Please provide either `payout_amount` or `cashout_odds`.", ephemeral=True)
 
+   
     bet_to_pull["status"] = "Cashed Out"
-    bet_to_pull["profit"] = actual_profit
+    bet_to_pull["profit"] = actual_profit 
     save_data(data)
 
     color = discord.Color.blue() if actual_profit >= 0 else discord.Color.orange()
@@ -540,6 +638,18 @@ async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: 
     embed.set_footer(text=f"ID: {bet_id}")
     
     await interaction.response.send_message(embed=embed)
+
+@bot.tree.command(name="leaderboard", description="Show top bettors by timeframe")
+async def leaderboard(interaction: discord.Interaction):
+    data = get_data()
+    view = LeaderboardView(data, interaction.guild.id, interaction.guild.name)
+    
+   
+    if not view.get_filtered_stats():
+        return await interaction.response.send_message("No bets recorded for this server yet.", ephemeral=True)
+
+    await interaction.response.send_message(embed=view.create_embed(), view=view)
+
 
 @bot.tree.command(name="profile", description="View a bettor's full profile and sport stats")
 async def profile(interaction: discord.Interaction, user: discord.Member = None):
@@ -590,15 +700,44 @@ async def profile(interaction: discord.Interaction, user: discord.Member = None)
     await interaction.response.send_message(embed=embed)
 
 
-@bot.tree.command(name="help", description="List commands")
+@bot.tree.command(name="help", description="View all available commands and how to use the bot")
 async def help(interaction: discord.Interaction):
-    embed = discord.Embed(title="🎲 Bet Tracker Help", color=discord.Color.red())
-    embed.add_field(name="📝 `/bet`", value="Track a bet. React with ✅ (Win), ❌ (Loss), ⏹️ (Void), or 💩 (Delete).", inline=False)
-    embed.add_field(name="💰 `/pnl`", value="Check your stats.", inline=False)
-    embed.add_field(name="📋 `/history`", value="View your bets or @user's bets.", inline=False)    
-    embed.add_field(name="🏆 `/leaderboard`", value="See rankings.", inline=False)
-    embed.add_field(name="🗑️ `/removebet`", value="Delete a bet using its ID.", inline=False)
-    embed.add_field(name="✏️ `/editbet`", value="Fix a mistake on a bet using its ID.", inline=False)
+    embed = discord.Embed(
+        title="🎲 Bet Tracker Pro - Help Menu", 
+        description="Track your bets, climb the leaderboard, and analyze your ROI by sport.",
+        color=discord.Color.red()
+    )
+
+    all_cmds = (
+        "📝 **/bet [sport] [pick] [units] [odds]**\n"
+        "Starts a new bet slip. Select your sport from the dropdown.\n\n"
+        "👤 **/profile (@user)**\n"
+        "Shows global stats (ROI, WR) and a sport-by-sport breakdown.\n\n"
+        "📋 **/history (@user) [sport]**\n"
+        "View a list of bets. You can filter by a specific sport.\n\n"
+        "🏆 **/leaderboard**\n"
+        "View rankings. Toggle between All-Time, Weekly, and Monthly.\n\n"
+        "💸 **/cashout [id] [payout/odds]**\n"
+        "Settle a bet early before the match officially ends.\n\n"
+        "✏️ **/editbet [id] [sport] [pick] [units] [odds] (@user)**\n"
+        "Fix errors on a slip. \n\n"
+        "🗑️ **/removebet [id]**\n"
+        "Delete a specific bet. Can also use poop emoji on the slip.\n\n"
+        "💰 **/pnl**\n"
+        "Quick check of your total units won/lost and overall record."
+    )
+    embed.add_field(name="🚀 Available Commands", value=all_cmds, inline=False)
+
+   
+    settle_guide = (
+        "React to your **Bet Slip** to update the status:\n"
+        "✅ = **Win** | ❌ = **Loss** | ⏹️ = **Void** | 💩 = **Delete Slip**\n"
+        "*Removing your reaction sets the bet back to 'Pending'.*"
+    )
+    embed.add_field(name="⚖️ How to Settle", value=settle_guide, inline=False)
+
+    embed.set_footer(text="Tip: Use the Bet ID found at the bottom of every slip for edits/removals.")
+
     await interaction.response.send_message(embed=embed)
 
 bot.run(token)

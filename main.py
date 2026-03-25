@@ -405,7 +405,7 @@ async def removebet(interaction: discord.Interaction, bet_id: str, user: discord
 async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: Range[float, 0, 10], new_odds: float, user: discord.Member = None):
     target_user = user or interaction.user
     
-   
+   git 
     is_admin = interaction.user.guild_permissions.administrator
     staff_roles = ['mod', 'moderator', 'staff', 'admin']
     is_staff = any(role.name.lower() in staff_roles for role in interaction.user.roles)

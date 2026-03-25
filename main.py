@@ -142,7 +142,7 @@ class HistoryPaginator(ui.View):
             embed.add_field(
                 name=f"Bet #{i} - {status_emoji} {b['status']}", 
                 value=(
-                    f"**Pick:** `{b['match']}`\n"
+                    f"**Pick:** `{b['pick']}`\n"
                     f"**Wager:** `{b['units']}u`\n"
                     f"**Odds:** `{display_odds}`\n"
                     f"**Result:** `{result_str}`\n"
@@ -180,7 +180,7 @@ bot = MyBot()
 @bot.tree.command(name="bet", description="Track a new bet")
 @app_commands.describe(sport="The sport/league this bet belongs to")
 @app_commands.choices(sport=[Choice(name=s, value=s) for s in SPORTS_LIST])
-async def bet(interaction: discord.Interaction, sport: Choice[str], match: str, units: Range[float, 0, 10], odds: float):
+async def bet(interaction: discord.Interaction, sport: Choice[str], pick: str, units: Range[float, 0, 10], odds: float):
     await interaction.response.defer()
     user_id, guild_id = str(interaction.user.id), str(interaction.guild.id)
     user_key = f"{guild_id}_{user_id}"
@@ -192,7 +192,7 @@ async def bet(interaction: discord.Interaction, sport: Choice[str], match: str, 
     if user_key not in data: data[user_key] = []
     
     data[user_key].append({
-        "bet_id": bet_id, "sport": sport.value, "match": match, "units": units, 
+        "bet_id": bet_id, "sport": sport.value, "pick": pick, "units": units, 
         "odds": decimal_odds, "original_odds": odds, "status": "Pending", 
         "profit": 0.0, "user_name": interaction.user.display_name
     })
@@ -203,7 +203,7 @@ async def bet(interaction: discord.Interaction, sport: Choice[str], match: str, 
     embed.set_author(name=f"{interaction.user.display_name}'s {sport.value} Bet", icon_url=interaction.user.display_avatar.url)
     embed.set_thumbnail(url="attachment://gdenimg.jpg")
 
-    embed.add_field(name="🏆 EVENT", value=f"`{match}`", inline=True)
+    embed.add_field(name="🏆 EVENT", value=f"`{pick}`", inline=True)
     embed.add_field(name="💰 WAGER", value=f"`{units}u`", inline=True)
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
     embed.set_footer(text=f"ID: {bet_id}")
@@ -399,7 +399,66 @@ async def removebet(interaction: discord.Interaction, bet_id: str, user: discord
     
     await interaction.response.send_message(f"✅ Bet `{bet_id}` has been removed.", ephemeral=True)
 
-async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: Range[float, 0, 10], new_odds: float):
+@bot.tree.command(name="editbet", description="Edit a bet's details. Staff can edit anyone's bet.")
+@app_commands.describe(sport="The corrected sport/league for this bet", user="Optional: Tag a user if you are staff editing their bet")
+@app_commands.choices(sport=[Choice(name=s, value=s) for s in SPORTS_LIST])
+async def editbet(interaction: discord.Interaction, bet_id: str, sport: Choice[str], new_pick: str, new_units: Range[float, 0, 10], new_odds: float, user: discord.Member = None):
+    
+    target_user = user or interaction.user
+    
+   
+    is_admin = interaction.user.guild_permissions.administrator
+    staff_roles = ['mod', 'moderator', 'staff', 'admin']
+    is_staff = any(role.name.lower() in staff_roles for role in interaction.user.roles)
+
+    if target_user != interaction.user and not (is_admin or is_staff):
+        return await interaction.response.send_message("❌ You don't have permission to edit someone else's bet.", ephemeral=True)
+
+    user_key = f"{interaction.guild.id}_{target_user.id}"
+    data = get_data()
+    
+   
+    user_bets = data.get(user_key, [])
+    bet_to_update = next((b for b in user_bets if b['bet_id'] == bet_id), None)
+            
+    if not bet_to_update:
+        return await interaction.response.send_message(f"Bet ID `{bet_id}` not found for {target_user.display_name}.", ephemeral=True)
+
+    
+    bet_to_update["sport"] = sport.value 
+    bet_to_update["pick"] = new_pick
+    bet_to_update["units"] = new_units
+    bet_to_update["original_odds"] = new_odds
+    bet_to_update["odds"] = convert_to_decimal(new_odds)
+    
+   
+    bet_to_update["status"] = "Pending"
+    bet_to_update["profit"] = 0.0
+    
+    save_data(data)
+    
+   
+    display_odds = format_odds(new_odds)
+    file = discord.File("gdenimg.jpg", filename="gdenimg.jpg")
+    
+    embed = discord.Embed(
+        color=discord.Color.blue(), 
+        timestamp=interaction.created_at
+    )
+    
+   
+    embed.set_author(name=f"{target_user.display_name}'s Updated {sport.value} Bet", icon_url=target_user.display_avatar.url)
+    embed.set_thumbnail(url="attachment://gdenimg.jpg")
+
+    embed.add_field(name="🏆 EVENT", value=f"`{new_pick}`", inline=True)
+    embed.add_field(name="💰 WAGER", value=f"`{new_units}u`", inline=True)
+    embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
+    
+    embed.set_footer(text=f"ID: {bet_id} • Updated by {interaction.user.display_name}")
+
+    await interaction.response.send_message(content=f"✅ Bet `{bet_id}` updated!", file=file, embed=embed)
+
+async def editbet(interaction: discord.Interaction, bet_id: str, new_pick: str, new_units: Range[float, 0, 10], new_odds: float):
     user_key = f"{interaction.guild.id}_{interaction.user.id}"
     data = get_data()
     
@@ -415,7 +474,7 @@ async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str,
     if not bet_to_update:
         return await interaction.response.send_message(f"Could not find a bet with ID: `{bet_id}`", ephemeral=True)
 
-    bet_to_update["match"] = new_match
+    bet_to_update["pick"] = new_pick
     bet_to_update["units"] = new_units
     bet_to_update["original_odds"] = new_odds
     bet_to_update["odds"] = convert_to_decimal(new_odds)
@@ -439,7 +498,7 @@ async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str,
     embed = discord.Embed(title="🎫 UPDATED BET SLIP", color=discord.Color.red(), timestamp=interaction.created_at)
     embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
     embed.set_thumbnail(url="attachment://gdenimg.jpg")
-    embed.add_field(name="🏆 EVENT", value=f"`{new_match}`", inline=False)
+    embed.add_field(name="🏆 EVENT", value=f"`{new_pick}`", inline=False)
     embed.add_field(name="💰 WAGER", value=f"`{new_units} units`", inline=True)
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
     embed.set_footer(text=f"ID: {bet_id}")
@@ -475,7 +534,7 @@ async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: 
 
     color = discord.Color.blue() if actual_profit >= 0 else discord.Color.orange()
     embed = discord.Embed(title="💰 BET CASHED OUT", color=color)
-    embed.add_field(name="Event", value=f"`{bet_to_pull['match']}`", inline=False)
+    embed.add_field(name="Event", value=f"`{bet_to_pull['pick']}`", inline=False)
     embed.add_field(name="Method", value=f"`{display_val}`", inline=True)
     embed.add_field(name="Resulting P/L", value=f"**{'+' if actual_profit > 0 else ''}{actual_profit}u**", inline=True)
     embed.set_footer(text=f"ID: {bet_id}")

@@ -209,6 +209,16 @@
             "status": "Pending",
             "profit": 0.0,
             "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "c3f4fd77",
+            "match": "T1 ML",
+            "units": 2.0,
+            "odds": 1.98,
+            "original_odds": 1.98,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
         }
     ],
     "1485941195128701082_469312558709342208": [
@@ -240,6 +250,26 @@
             "original_odds": 1.5,
             "status": "Win",
             "profit": 15.0,
+            "user_name": "Moony"
+        },
+        {
+            "bet_id": "3d5f4ade",
+            "match": "G2 ML",
+            "units": 1.0,
+            "odds": 1.6,
+            "original_odds": 1.6,
+            "status": "Win",
+            "profit": 0.6,
+            "user_name": "Moony"
+        },
+        {
+            "bet_id": "bd91ad95",
+            "match": "HLE",
+            "units": 1.0,
+            "odds": 1.89,
+            "original_odds": 1.89,
+            "status": "Pending",
+            "profit": 0.0,
             "user_name": "Moony"
         }
     ]

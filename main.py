@@ -215,7 +215,6 @@ async def bet(interaction: discord.Interaction, match: str, units: Range[float, 
 async def on_raw_reaction_add(payload):
     if payload.user_id == bot.user.id: return
     
-   
     emoji = str(payload.emoji)
     if emoji not in ["✅", "❌", "⏹️", "💩"]: return
 
@@ -226,34 +225,55 @@ async def on_raw_reaction_add(payload):
         footer_text = message.embeds[0].footer.text
         if "ID: " in footer_text:
             bet_id = footer_text.split("ID: ")[1].strip()
-            user_key = f"{payload.guild_id}_{payload.user_id}"
+            
             data = get_data()
+            target_user_key = None
+            found_bet = None
 
-            if user_key in data:
-               
-                if emoji == "💩":
-                    data[user_key] = [b for b in data[user_key] if b["bet_id"] != bet_id]
-                    
-                    if not data[user_key]: del data[user_key]
-                    save_data(data)
-                    await message.delete() 
-                    await channel.send(f"🗑️ Bet `{bet_id}` has been deleted.", delete_after=3)
-                    return
+            # Find the bet owner globally
+            guild_prefix = f"{payload.guild_id}_"
+            for key in data:
+                if key.startswith(guild_prefix):
+                    for b in data[key]:
+                        if b["bet_id"] == bet_id:
+                            target_user_key = key
+                            found_bet = b
+                            break
+            
+            if not found_bet: return
 
-                
-                for b in data[user_key]:
-                    if b["bet_id"] == bet_id:
-                        if emoji == "✅":
-                            b["status"], b["profit"] = "Win", round((float(b["units"]) * float(b["odds"])) - float(b["units"]), 2)
-                        elif emoji == "❌":
-                            b["status"], b["profit"] = "Loss", -float(b["units"])
-                        elif emoji == "⏹️":
-                            b["status"], b["profit"] = "Void", 0.0
-                        
-                        save_data(data)
-                        name = payload.member.display_name if payload.member else "User"
-                        await channel.send(f"📊 Bet `{bet_id}` settled as **{b['status']}** for {name}!", delete_after=5)
-                        return
+            # --- THE PERMISSION CHECK ---
+            # 1. Is it their own bet?
+            is_owner = str(payload.user_id) in target_user_key
+            
+            # 2. Are they an Admin? (The setting toggle)
+            is_admin = payload.member.guild_permissions.administrator
+            
+            # 3. Do they have a specific Mod role?
+            staff_role_names = ['mod', 'moderator', 'staff', 'admin']
+            has_mod_role = any(role.name.lower() in staff_role_names for role in payload.member.roles)
+
+            # If they aren't the owner and aren't staff, stop here.
+            if not (is_owner or is_admin or has_mod_role):
+                return 
+
+            # --- PROCEED WITH SETTLEMENT ---
+            if emoji == "💩":
+                data[target_user_key] = [b for b in data[target_user_key] if b["bet_id"] != bet_id]
+                if not data[target_user_key]: del data[target_user_key]
+                save_data(data)
+                await message.delete()
+                return
+
+            if emoji == "✅":
+                found_bet["status"], found_bet["profit"] = "Win", round((float(found_bet["units"]) * float(found_bet["odds"])) - float(found_bet["units"]), 2)
+            elif emoji == "❌":
+                found_bet["status"], found_bet["profit"] = "Loss", -float(found_bet["units"])
+            elif emoji == "⏹️":
+                found_bet["status"], found_bet["profit"] = "Void", 0.0
+            
+            save_data(data)
+            await channel.send(f"📊 Bet `{bet_id}` settled as **{found_bet['status']}** by {payload.member.display_name}!", delete_after=5)
 
 @bot.event
 async def on_raw_reaction_remove(payload):
@@ -351,53 +371,56 @@ async def history(interaction: discord.Interaction, user: discord.Member = None)
 
 
 
-@bot.tree.command(name="removebet", description="Delete a bet from your history using its ID")
-async def removebet(interaction: discord.Interaction, bet_id: str):
-    user_key = f"{interaction.guild.id}_{interaction.user.id}"
+@bot.tree.command(name="removebet", description="Delete a bet. Staff can delete anyone's bet.")
+async def removebet(interaction: discord.Interaction, bet_id: str, user: discord.Member = None):
+   
+    target_user = user or interaction.user
+    
+    is_admin = interaction.user.guild_permissions.administrator
+    staff_roles = ['mod', 'moderator', 'staff', 'admin']
+    is_staff = any(role.name.lower() in staff_roles for role in interaction.user.roles)
+
+    if target_user != interaction.user and not (is_admin or is_staff):
+        return await interaction.response.send_message("❌ You don't have permission to remove someone else's bet.", ephemeral=True)
+
+    user_key = f"{interaction.guild.id}_{target_user.id}"
     data = get_data()
     
     if user_key not in data:
-        return await interaction.response.send_message("You have no bet history.", ephemeral=True)
+        return await interaction.response.send_message("No history found for this user.", ephemeral=True)
     
- 
     original_list = data[user_key]
     new_list = [b for b in original_list if b['bet_id'] != bet_id]
     
     if len(original_list) == len(new_list):
-        return await interaction.response.send_message(f"Could not find a bet with ID: `{bet_id}`", ephemeral=True)
+        return await interaction.response.send_message(f"Could not find bet ID `{bet_id}` for this user.", ephemeral=True)
   
     data[user_key] = new_list
+    if not data[user_key]: del data[user_key]
     save_data(data)
     
-    await interaction.response.send_message(f"✅ Bet `{bet_id}` has been removed from your history.", ephemeral=True)
+    await interaction.response.send_message(f"✅ Bet `{bet_id}` has been removed.", ephemeral=True)
 
+@bot.tree.command(name="editbet", description="Edit a bet's details. Staff can edit anyone's bet.")
+async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: Range[float, 0, 10], new_odds: float, user: discord.Member = None):
+    target_user = user or interaction.user
+    
+   
+    is_admin = interaction.user.guild_permissions.administrator
+    staff_roles = ['mod', 'moderator', 'staff', 'admin']
+    is_staff = any(role.name.lower() in staff_roles for role in interaction.user.roles)
 
-    try:
-        async for message in interaction.channel.history(limit=100):
-            if message.author == bot.user and message.embeds:
-                footer = message.embeds[0].footer.text
-                if footer and bet_id in footer:
-                    await message.delete()
-                    break 
-    except Exception:
-        pass 
+    if target_user != interaction.user and not (is_admin or is_staff):
+        return await interaction.response.send_message("❌ You don't have permission to edit someone else's bet.", ephemeral=True)
 
-@bot.tree.command(name="editbet", description="Edit an existing bet's details using its ID")
-async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: Range[float, 0, 10], new_odds: float):
-    user_key = f"{interaction.guild.id}_{interaction.user.id}"
+    user_key = f"{interaction.guild.id}_{target_user.id}"
     data = get_data()
     
-    if user_key not in data:
-        return await interaction.response.send_message("You have no bet history.", ephemeral=True)
-    
-    bet_to_update = None
-    for b in data[user_key]:
-        if b['bet_id'] == bet_id:
-            bet_to_update = b
-            break
+    bet_to_update = next((b for b in data.get(user_key, []) if b['bet_id'] == bet_id), None)
             
     if not bet_to_update:
-        return await interaction.response.send_message(f"Could not find a bet with ID: `{bet_id}`", ephemeral=True)
+        return await interaction.response.send_message(f"Bet ID `{bet_id}` not found for this user.", ephemeral=True)
+
 
     bet_to_update["match"] = new_match
     bet_to_update["units"] = new_units
@@ -407,28 +430,18 @@ async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str,
     bet_to_update["profit"] = 0.0
     save_data(data)
     
-    try:
-        async for message in interaction.channel.history(limit=100):
-            if message.author == bot.user and message.embeds:
-                footer = message.embeds[0].footer.text
-                if footer and bet_id in footer:
-                    await message.delete()
-                    break 
-    except Exception:
-        pass
-
-
+    
     display_odds = format_odds(new_odds)
     file = discord.File("gdenimg.jpg", filename="gdenimg.jpg")
-    embed = discord.Embed(title="🎫 UPDATED BET SLIP", color=discord.Color.red(), timestamp=interaction.created_at)
-    embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+    embed = discord.Embed(color=discord.Color.red(), timestamp=interaction.created_at)
+    embed.set_author(name=f"{target_user.display_name}'s Updated Bet", icon_url=target_user.display_avatar.url)
     embed.set_thumbnail(url="attachment://gdenimg.jpg")
-    embed.add_field(name="🏆 EVENT", value=f"`{new_match}`", inline=False)
-    embed.add_field(name="💰 WAGER", value=f"`{new_units} units`", inline=True)
+    embed.add_field(name="🏆 EVENT", value=f"`{new_match}`", inline=True)
+    embed.add_field(name="💰 WAGER", value=f"`{new_units}u`", inline=True)
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
     embed.set_footer(text=f"ID: {bet_id}")
 
-    await interaction.response.send_message(content=f"✅ Bet `{bet_id}` updated!", file=file, embed=embed)
+    await interaction.response.send_message(content=f"✅ Bet `{bet_id}` updated by {interaction.user.display_name}!", file=file, embed=embed)
 
 @bot.tree.command(name="cashout", description="Settle a bet early via payout amount or specific odds")
 async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: float = None, cashout_odds: float = None):

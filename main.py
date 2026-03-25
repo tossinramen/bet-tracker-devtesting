@@ -1,6 +1,6 @@
 import discord
 from discord import app_commands, ui
-from discord.app_commands import Range 
+from discord.app_commands import Choice, Range 
 from discord.ext import commands
 import os
 import json
@@ -15,6 +15,12 @@ intents.message_content = True
 intents.members = True
 intents.reactions = True 
 DATA_FILE = "bets.json"
+
+SPORTS_LIST = [
+    "LCS", "LEC", "LPL", "LCK", "APAC", "CBLOL", 
+    "CS2", "Val", "Dota", "Tennis", "MMA", 
+    "Cricket", "Baseball", "Soccer", "Hockey"
+]
 
 # --- DATA HELPERS ---
 def convert_to_decimal(odds_input: float) -> float:
@@ -172,7 +178,9 @@ class MyBot(commands.Bot):
 bot = MyBot()
 
 @bot.tree.command(name="bet", description="Track a new bet")
-async def bet(interaction: discord.Interaction, match: str, units: Range[float, 0, 10], odds: float):
+@app_commands.describe(sport="The sport/league this bet belongs to")
+@app_commands.choices(sport=[Choice(name=s, value=s) for s in SPORTS_LIST])
+async def bet(interaction: discord.Interaction, sport: Choice[str], match: str, units: Range[float, 0, 10], odds: float):
     await interaction.response.defer()
     user_id, guild_id = str(interaction.user.id), str(interaction.guild.id)
     user_key = f"{guild_id}_{user_id}"
@@ -182,31 +190,22 @@ async def bet(interaction: discord.Interaction, match: str, units: Range[float, 
 
     data = get_data()
     if user_key not in data: data[user_key] = []
+    
     data[user_key].append({
-        "bet_id": bet_id, "match": match, "units": units, "odds": decimal_odds, 
-        "original_odds": odds, "status": "Pending", "profit": 0.0,
-        "user_name": interaction.user.display_name
+        "bet_id": bet_id, "sport": sport.value, "match": match, "units": units, 
+        "odds": decimal_odds, "original_odds": odds, "status": "Pending", 
+        "profit": 0.0, "user_name": interaction.user.display_name
     })
     save_data(data)
 
     file = discord.File("gdenimg.jpg", filename="gdenimg.jpg")
-    
-
-    embed = discord.Embed(
-        color=discord.Color.red(), 
-        timestamp=interaction.created_at
-    )
-    
-
-    embed.set_author(name=f"{interaction.user.display_name}'s Bet", icon_url=interaction.user.display_avatar.url)
-    
+    embed = discord.Embed(color=discord.Color.red(), timestamp=interaction.created_at)
+    embed.set_author(name=f"{interaction.user.display_name}'s {sport.value} Bet", icon_url=interaction.user.display_avatar.url)
     embed.set_thumbnail(url="attachment://gdenimg.jpg")
 
-    # The core info
     embed.add_field(name="🏆 EVENT", value=f"`{match}`", inline=True)
     embed.add_field(name="💰 WAGER", value=f"`{units}u`", inline=True)
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
-    
     embed.set_footer(text=f"ID: {bet_id}")
 
     await interaction.followup.send(file=file, embed=embed)
@@ -230,7 +229,7 @@ async def on_raw_reaction_add(payload):
             target_user_key = None
             found_bet = None
 
-            # Find the bet owner globally
+           
             guild_prefix = f"{payload.guild_id}_"
             for key in data:
                 if key.startswith(guild_prefix):
@@ -242,22 +241,21 @@ async def on_raw_reaction_add(payload):
             
             if not found_bet: return
 
-            # --- THE PERMISSION CHECK ---
-            # 1. Is it their own bet?
+          
             is_owner = str(payload.user_id) in target_user_key
             
-            # 2. Are they an Admin? (The setting toggle)
+            
             is_admin = payload.member.guild_permissions.administrator
             
-            # 3. Do they have a specific Mod role?
+           
             staff_role_names = ['mod', 'moderator', 'staff', 'admin']
             has_mod_role = any(role.name.lower() in staff_role_names for role in payload.member.roles)
 
-            # If they aren't the owner and aren't staff, stop here.
+       
             if not (is_owner or is_admin or has_mod_role):
                 return 
 
-            # --- PROCEED WITH SETTLEMENT ---
+           
             if emoji == "💩":
                 data[target_user_key] = [b for b in data[target_user_key] if b["bet_id"] != bet_id]
                 if not data[target_user_key]: del data[target_user_key]
@@ -401,26 +399,21 @@ async def removebet(interaction: discord.Interaction, bet_id: str, user: discord
     
     await interaction.response.send_message(f"✅ Bet `{bet_id}` has been removed.", ephemeral=True)
 
-@bot.tree.command(name="editbet", description="Edit a bet's details. Staff can edit anyone's bet.")
-async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: Range[float, 0, 10], new_odds: float, user: discord.Member = None):
-    target_user = user or interaction.user
-    
-   git 
-    is_admin = interaction.user.guild_permissions.administrator
-    staff_roles = ['mod', 'moderator', 'staff', 'admin']
-    is_staff = any(role.name.lower() in staff_roles for role in interaction.user.roles)
-
-    if target_user != interaction.user and not (is_admin or is_staff):
-        return await interaction.response.send_message("❌ You don't have permission to edit someone else's bet.", ephemeral=True)
-
-    user_key = f"{interaction.guild.id}_{target_user.id}"
+async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: Range[float, 0, 10], new_odds: float):
+    user_key = f"{interaction.guild.id}_{interaction.user.id}"
     data = get_data()
     
-    bet_to_update = next((b for b in data.get(user_key, []) if b['bet_id'] == bet_id), None)
+    if user_key not in data:
+        return await interaction.response.send_message("You have no bet history.", ephemeral=True)
+    
+    bet_to_update = None
+    for b in data[user_key]:
+        if b['bet_id'] == bet_id:
+            bet_to_update = b
+            break
             
     if not bet_to_update:
-        return await interaction.response.send_message(f"Bet ID `{bet_id}` not found for this user.", ephemeral=True)
-
+        return await interaction.response.send_message(f"Could not find a bet with ID: `{bet_id}`", ephemeral=True)
 
     bet_to_update["match"] = new_match
     bet_to_update["units"] = new_units
@@ -430,18 +423,28 @@ async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str,
     bet_to_update["profit"] = 0.0
     save_data(data)
     
-    
+    try:
+        async for message in interaction.channel.history(limit=100):
+            if message.author == bot.user and message.embeds:
+                footer = message.embeds[0].footer.text
+                if footer and bet_id in footer:
+                    await message.delete()
+                    break 
+    except Exception:
+        pass
+
+
     display_odds = format_odds(new_odds)
     file = discord.File("gdenimg.jpg", filename="gdenimg.jpg")
-    embed = discord.Embed(color=discord.Color.red(), timestamp=interaction.created_at)
-    embed.set_author(name=f"{target_user.display_name}'s Updated Bet", icon_url=target_user.display_avatar.url)
+    embed = discord.Embed(title="🎫 UPDATED BET SLIP", color=discord.Color.red(), timestamp=interaction.created_at)
+    embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
     embed.set_thumbnail(url="attachment://gdenimg.jpg")
-    embed.add_field(name="🏆 EVENT", value=f"`{new_match}`", inline=True)
-    embed.add_field(name="💰 WAGER", value=f"`{new_units}u`", inline=True)
+    embed.add_field(name="🏆 EVENT", value=f"`{new_match}`", inline=False)
+    embed.add_field(name="💰 WAGER", value=f"`{new_units} units`", inline=True)
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
     embed.set_footer(text=f"ID: {bet_id}")
 
-    await interaction.response.send_message(content=f"✅ Bet `{bet_id}` updated by {interaction.user.display_name}!", file=file, embed=embed)
+    await interaction.response.send_message(content=f"✅ Bet `{bet_id}` updated!", file=file, embed=embed)
 
 @bot.tree.command(name="cashout", description="Settle a bet early via payout amount or specific odds")
 async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: float = None, cashout_odds: float = None):
@@ -476,6 +479,54 @@ async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: 
     embed.add_field(name="Method", value=f"`{display_val}`", inline=True)
     embed.add_field(name="Resulting P/L", value=f"**{'+' if actual_profit > 0 else ''}{actual_profit}u**", inline=True)
     embed.set_footer(text=f"ID: {bet_id}")
+    
+    await interaction.response.send_message(embed=embed)
+
+@bot.tree.command(name="profile", description="View a bettor's full profile and sport stats")
+async def profile(interaction: discord.Interaction, user: discord.Member = None):
+    target_user = user or interaction.user
+    data = get_data()
+    user_key = f"{interaction.guild.id}_{target_user.id}"
+    user_bets = data.get(user_key, [])
+
+    if not user_bets:
+        return await interaction.response.send_message(f"No data found for {target_user.display_name}.", ephemeral=True)
+
+    settled_bets = [b for b in user_bets if b['status'] in ["Win", "Loss"]]
+    wins = len([b for b in settled_bets if b['status'] == "Win"])
+    losses = len([b for b in settled_bets if b['status'] == "Loss"])
+    total_pnl = round(sum(float(b['profit']) for b in user_bets), 2)
+    
+    total_staked = sum(float(b['units']) for b in user_bets if b['status'] in ["Win", "Loss", "Cashed Out"])
+    wr = round((wins / len(settled_bets) * 100), 1) if settled_bets else 0
+    roi = round((total_pnl / total_staked * 100), 1) if total_staked > 0 else 0
+    avg_odds = round(sum(float(b['odds']) for b in user_bets) / len(user_bets), 2) if user_bets else 0
+
+    embed = discord.Embed(title=f"👤 {target_user.display_name.upper()}'S BETTING PROFILE", color=discord.Color.red())
+    embed.set_thumbnail(url=target_user.display_avatar.url)
+
+    embed.add_field(name="📊 RECORD", value=f"`{wins}W-{losses}L`", inline=True)
+    embed.add_field(name="🎯 WINRATE", value=f"`{wr}%`", inline=True)
+    embed.add_field(name="💰 P/L", value=f"`{total_pnl}u`", inline=True)
+    embed.add_field(name="📈 ROI", value=f"`{roi}%`", inline=True)
+    embed.add_field(name="🎲 AVG ODDS", value=f"`{avg_odds}`", inline=True)
+    embed.add_field(name="\u200b", value="\u200b", inline=True) # Spacer
+
+
+    sport_stats = ""
+    for sport in SPORTS_LIST:
+        s_bets = [b for b in user_bets if b.get('sport') == sport]
+        if not s_bets: continue
+        
+        s_settled = [b for b in s_bets if b['status'] in ["Win", "Loss"]]
+        s_wins = len([b for b in s_settled if b['status'] == "Win"])
+        s_losses = len([b for b in s_settled if b['status'] == "Loss"])
+        s_pnl = round(sum(float(b['profit']) for b in s_bets), 2)
+        
+        pnl_str = f"+{s_pnl}u" if s_pnl > 0 else f"{s_pnl}u"
+        sport_stats += f"**{sport}**: `{s_wins}W-{s_losses}L` | `{pnl_str}`\n"
+
+    embed.add_field(name="🏟️ SPORT BREAKDOWN", value=sport_stats or "No sports tracked yet.", inline=False)
     
     await interaction.response.send_message(embed=embed)
 

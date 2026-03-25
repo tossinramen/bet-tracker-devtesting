@@ -141,11 +141,71 @@
             "user_name": "tahjoker"
         },
         {
-            "bet_id": "cedc6f5e",
-            "match": "FPX ML",
+            "bet_id": "36cebdb6",
+            "match": "G2 ML",
             "units": 2.0,
             "odds": 1.9,
             "original_odds": 1.9,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "bb3b80de",
+            "match": "T1 ML",
+            "units": 1.0,
+            "odds": 1.98,
+            "original_odds": 1.98,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "2b428759",
+            "match": "HLE ML",
+            "units": 1.0,
+            "odds": 1.98,
+            "original_odds": 1.98,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "07bdac48",
+            "match": "G2 ML",
+            "units": 1.0,
+            "odds": 1.98,
+            "original_odds": 1.98,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "d793d454",
+            "match": "UOL ML",
+            "units": 1.0,
+            "odds": 1.5,
+            "original_odds": 1.5,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "cebb45b4",
+            "match": "HLE ML",
+            "units": 1.0,
+            "odds": 1.98,
+            "original_odds": 1.98,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker"
+        },
+        {
+            "bet_id": "14c1622f",
+            "match": "HLE ML",
+            "units": 1.0,
+            "odds": 1.98,
+            "original_odds": 1.98,
             "status": "Pending",
             "profit": 0.0,
             "user_name": "tahjoker"

@@ -1,5 +1,6 @@
 import discord
 from discord import app_commands, ui
+from discord.app_commands import Range 
 from discord.ext import commands
 import os
 import json
@@ -129,7 +130,7 @@ class HistoryPaginator(ui.View):
             profit_val = float(b.get('profit', 0.0))
             result_str = f"+{profit_val}u" if b['status'] == "Win" else f"{profit_val}u" if b['status'] == "Loss" else "0.0u"
 
-            # UPDATED: Use the formatted display odds for history too
+           
             display_odds = format_odds(b.get('original_odds', 0))
 
             embed.add_field(
@@ -171,18 +172,16 @@ class MyBot(commands.Bot):
 bot = MyBot()
 
 @bot.tree.command(name="bet", description="Track a new bet")
-async def bet(interaction: discord.Interaction, match: str, units: float, odds: float):
+async def bet(interaction: discord.Interaction, match: str, units: Range[float, 0, 10], odds: float):
     await interaction.response.defer()
     user_id, guild_id = str(interaction.user.id), str(interaction.guild.id)
     user_key = f"{guild_id}_{user_id}"
     bet_id = str(uuid.uuid4())[:8]
     decimal_odds = convert_to_decimal(odds)
-    
     display_odds = format_odds(odds)
 
     data = get_data()
     if user_key not in data: data[user_key] = []
-    
     data[user_key].append({
         "bet_id": bet_id, "match": match, "units": units, "odds": decimal_odds, 
         "original_odds": odds, "status": "Pending", "profit": 0.0,
@@ -190,14 +189,24 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
     })
     save_data(data)
 
-    file = discord.File("spongebob.jfif", filename="spongebob.jfif")
-    embed = discord.Embed(title="🎫 NEW BET SLIP", color=discord.Color.red(), timestamp=interaction.created_at)
-    embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
-    embed.set_thumbnail(url="attachment://spongebob.jfif")
-    embed.add_field(name="🏆 EVENT", value=f"`{match}`", inline=False)
-    embed.add_field(name="💰 WAGER", value=f"`{units} units`", inline=True)
+    file = discord.File("gdenimg.jpg", filename="gdenimg.jpg")
     
+
+    embed = discord.Embed(
+        color=discord.Color.red(), 
+        timestamp=interaction.created_at
+    )
+    
+
+    embed.set_author(name=f"{interaction.user.display_name}'s Bet", icon_url=interaction.user.display_avatar.url)
+    
+    embed.set_thumbnail(url="attachment://gdenimg.jpg")
+
+    # The core info
+    embed.add_field(name="🏆 EVENT", value=f"`{match}`", inline=True)
+    embed.add_field(name="💰 WAGER", value=f"`{units}u`", inline=True)
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
+    
     embed.set_footer(text=f"ID: {bet_id}")
 
     await interaction.followup.send(file=file, embed=embed)
@@ -206,7 +215,7 @@ async def bet(interaction: discord.Interaction, match: str, units: float, odds: 
 async def on_raw_reaction_add(payload):
     if payload.user_id == bot.user.id: return
     
-    # 1. Added 💩 to the allowed list
+   
     emoji = str(payload.emoji)
     if emoji not in ["✅", "❌", "⏹️", "💩"]: return
 
@@ -221,17 +230,17 @@ async def on_raw_reaction_add(payload):
             data = get_data()
 
             if user_key in data:
-                # SPECIAL CASE: The Poop emoji deletes the bet entirely
+               
                 if emoji == "💩":
                     data[user_key] = [b for b in data[user_key] if b["bet_id"] != bet_id]
-                    # Clean up empty users to keep the file small
+                    
                     if not data[user_key]: del data[user_key]
                     save_data(data)
-                    await message.delete() # Delete the slip
+                    await message.delete() 
                     await channel.send(f"🗑️ Bet `{bet_id}` has been deleted.", delete_after=3)
                     return
 
-                # Normal settlement logic for other emojis
+                
                 for b in data[user_key]:
                     if b["bet_id"] == bet_id:
                         if emoji == "✅":
@@ -325,7 +334,6 @@ async def leaderboard(interaction: discord.Interaction):
 
 @bot.tree.command(name="history", description="Show a user's bet history")
 async def history(interaction: discord.Interaction, user: discord.Member = None):
-    # Use specified user, otherwise default to the person who ran the command
     target_user = user or interaction.user
     
     data = get_data()
@@ -375,7 +383,7 @@ async def removebet(interaction: discord.Interaction, bet_id: str):
         pass 
 
 @bot.tree.command(name="editbet", description="Edit an existing bet's details using its ID")
-async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: float, new_odds: float):
+async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str, new_units: Range[float, 0, 10], new_odds: float):
     user_key = f"{interaction.guild.id}_{interaction.user.id}"
     data = get_data()
     
@@ -411,10 +419,10 @@ async def editbet(interaction: discord.Interaction, bet_id: str, new_match: str,
 
 
     display_odds = format_odds(new_odds)
-    file = discord.File("spongebob.jfif", filename="spongebob.jfif")
+    file = discord.File("gdenimg.jpg", filename="gdenimg.jpg")
     embed = discord.Embed(title="🎫 UPDATED BET SLIP", color=discord.Color.red(), timestamp=interaction.created_at)
     embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
-    embed.set_thumbnail(url="attachment://spongebob.jfif")
+    embed.set_thumbnail(url="attachment://gdenimg.jpg")
     embed.add_field(name="🏆 EVENT", value=f"`{new_match}`", inline=False)
     embed.add_field(name="💰 WAGER", value=f"`{new_units} units`", inline=True)
     embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)

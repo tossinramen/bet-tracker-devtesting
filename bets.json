@@ -520,6 +520,42 @@
             "profit": 0.8,
             "user_name": "Moony",
             "timestamp": "2026-03-26T02:08:46.945365"
+        },
+        {
+            "bet_id": "aa5b03f1",
+            "sport": "League",
+            "pick": "Misa ML",
+            "units": 2.0,
+            "odds": 1.8,
+            "original_odds": 1.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Moony",
+            "timestamp": "2026-03-26T02:25:06.976143"
+        },
+        {
+            "bet_id": "dc049474",
+            "sport": "League",
+            "pick": "BBL ML",
+            "units": 1.5,
+            "odds": 3.0,
+            "original_odds": 3.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Moony",
+            "timestamp": "2026-03-26T02:26:16.253322"
+        },
+        {
+            "bet_id": "92f64a00",
+            "sport": "League",
+            "pick": "Stupid ML",
+            "units": 1.0,
+            "odds": 1.8,
+            "original_odds": 1.8,
+            "status": "Win",
+            "profit": 0.8,
+            "user_name": "Moony",
+            "timestamp": "2026-03-26T02:27:40.645160"
         }
     ]
 }

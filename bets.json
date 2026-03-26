@@ -456,6 +456,18 @@
             "profit": 0.0,
             "user_name": "tahjoker",
             "timestamp": "2026-03-26T02:12:48.938279"
+        },
+        {
+            "bet_id": "add62505",
+            "sport": "League",
+            "pick": "TSW ML",
+            "units": 1.0,
+            "odds": 1.8,
+            "original_odds": 1.8,
+            "status": "Win",
+            "profit": 0.8,
+            "user_name": "tahjoker",
+            "timestamp": "2026-03-26T02:43:07.186203"
         }
     ],
     "1485941195128701082_469312558709342208": [
@@ -550,10 +562,10 @@
             "sport": "League",
             "pick": "Stupid ML",
             "units": 1.0,
-            "odds": 1.8,
-            "original_odds": 1.8,
-            "status": "Win",
-            "profit": 0.8,
+            "odds": 1.7,
+            "original_odds": 1.7,
+            "status": "Loss",
+            "profit": -0.7,
             "user_name": "Moony",
             "timestamp": "2026-03-26T02:27:40.645160"
         }

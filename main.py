@@ -675,6 +675,67 @@ async def profile(interaction: discord.Interaction, user: discord.Member = None)
     
     await interaction.response.send_message(embed=embed)
 
+@bot.tree.command(name="edithistory", description="ADMIN ONLY: Manually override a bet's details and exact profit.")
+@app_commands.describe(
+    bet_id="The ID of the bet to modify",
+    new_pick="The updated event/pick name",
+    new_units="The updated wager amount",
+    new_odds="The updated odds",
+    status="The final status (Win, Loss, Void, etc.)",
+    result_units="The exact profit/loss in units (e.g., 0.8 or -1.5)"
+)
+@app_commands.choices(status=[
+    Choice(name="Win", value="Win"),
+    Choice(name="Loss", value="Loss"),
+    Choice(name="Void", value="Void"),
+    Choice(name="Pending", value="Pending"),
+    Choice(name="Cashed Out", value="Cashed Out")
+])
+@app_commands.checks.has_permissions(administrator=True)
+async def edithistory(interaction: discord.Interaction, bet_id: str, new_pick: str, new_units: float, new_odds: float, status: Choice[str], result_units: float):
+    await interaction.response.defer(ephemeral=True)
+    
+    data = get_data()
+    guild_prefix = f"{interaction.guild.id}_"
+    target_user_key = None
+    bet_to_fix = None
+
+   
+    for key, bets in data.items():
+        if key.startswith(guild_prefix):
+            bet_to_fix = next((b for b in bets if b['bet_id'] == bet_id), None)
+            if bet_to_fix:
+                target_user_key = key
+                break
+
+    if not bet_to_fix:
+        return await interaction.followup.send(f"❌ Could not find bet `{bet_id}`.", ephemeral=True)
+
+    
+    decimal_odds = convert_to_decimal(new_odds)
+    
+    bet_to_fix.update({
+        "pick": new_pick,
+        "units": new_units,
+        "original_odds": new_odds,
+        "odds": decimal_odds,
+        "status": status.value,
+        "profit": round(result_units, 2) 
+    })
+
+    save_data(data)
+
+   
+    owner_name = bet_to_fix.get('user_name', 'Unknown')
+    pnl_str = f"{'+' if result_units > 0 else ''}{result_units}u"
+    
+    embed = discord.Embed(title="✅ History Overwritten", color=discord.Color.green())
+    embed.add_field(name="User", value=owner_name, inline=True)
+    embed.add_field(name="Result", value=f"**{status.value}** ({pnl_str})", inline=True)
+    embed.set_footer(text=f"ID: {bet_id} • Manual Override")
+
+    await interaction.followup.send(embed=embed, ephemeral=True)
+
 
 @bot.tree.command(name="help", description="View all available commands and how to use the bot")
 async def help(interaction: discord.Interaction):

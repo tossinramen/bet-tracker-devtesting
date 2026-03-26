@@ -19,10 +19,10 @@ intents.reactions = True
 DATA_FILE = "bets.json"
 
 SPORTS_LIST = [
-    "LCS", "LEC", "LPL", "LCK", "APAC", "CBLOL", "League Int",
-    "Basketball",
-    "CS2", "Val", "Dota", "Tennis", "MMA", 
-    "Cricket", "Baseball", "Soccer", "Hockey"
+    "League", "Basketball", "CS2", "Val", "Dota", "Tennis", "MMA", 
+    "Cricket", "Baseball", "Soccer", "Hockey", "Kalshi/Poly Trades", 
+    "COD", "Table Tennis", "Badminton", "Volleyball", "Rugby", 
+    "Boxing", "Darts", "Snooker", "Electronic Sports", "Mixed Parlay"
 ]
 
 # --- DATA HELPERS ---
@@ -234,15 +234,15 @@ async def on_raw_reaction_add(payload):
     message = await channel.fetch_message(payload.message_id)
 
     if message.embeds and message.embeds[0].footer.text:
-        footer_text = message.embeds[0].footer.text
-        if "ID: " in footer_text:
-            bet_id = footer_text.split("ID: ")[1].strip()
+        footer = message.embeds[0].footer.text
+        if "ID: " in footer:
+            
+            bet_id = footer.split("ID: ")[1][:8].strip()
             
             data = get_data()
             target_user_key = None
             found_bet = None
 
-           
             guild_prefix = f"{payload.guild_id}_"
             for key in data:
                 if key.startswith(guild_prefix):
@@ -254,21 +254,14 @@ async def on_raw_reaction_add(payload):
             
             if not found_bet: return
 
-          
             is_owner = str(payload.user_id) in target_user_key
-            
-            
             is_admin = payload.member.guild_permissions.administrator
-            
-           
-            staff_role_names = ['mod', 'moderator', 'staff', 'admin']
-            has_mod_role = any(role.name.lower() in staff_role_names for role in payload.member.roles)
+            staff_roles = ['mod', 'moderator', 'staff', 'admin']
+            has_mod_role = any(role.name.lower() in staff_roles for role in payload.member.roles)
 
-       
             if not (is_owner or is_admin or has_mod_role):
                 return 
 
-           
             if emoji == "💩":
                 data[target_user_key] = [b for b in data[target_user_key] if b["bet_id"] != bet_id]
                 if not data[target_user_key]: del data[target_user_key]
@@ -285,7 +278,6 @@ async def on_raw_reaction_add(payload):
             
             save_data(data)
             await channel.send(f"📊 Bet `{bet_id}` settled as **{found_bet['status']}** by {payload.member.display_name}!", delete_after=5)
-
 @bot.event
 async def on_raw_reaction_remove(payload):
     if payload.user_id == bot.user.id: return
@@ -295,7 +287,9 @@ async def on_raw_reaction_remove(payload):
     if message.embeds and message.embeds[0].footer.text:
         footer_text = message.embeds[0].footer.text
         if "ID: " in footer_text:
-            bet_id = footer_text.split("ID: ")[1].strip()
+            # FIX: Grab only the first 8 characters of the ID, ignoring the bullet and timestamp
+            bet_id = footer_text.split("ID: ")[1][:8].strip()
+            
             user_key = f"{payload.guild_id}_{payload.user_id}"
             data = get_data()
 
@@ -469,35 +463,36 @@ async def history(interaction: discord.Interaction, user: discord.Member = None,
     msg = await interaction.followup.send(embed=view.create_embed(), view=view)
     view.message = msg
 
-@bot.tree.command(name="removebet", description="Delete a bet. Staff can delete anyone's bet.")
-async def removebet(interaction: discord.Interaction, bet_id: str, user: discord.Member = None):
-   
-    target_user = user or interaction.user
-    
+@bot.tree.command(name="removebet", description="Delete a bet. Admins/Staff or the original bettor can delete.")
+async def removebet(interaction: discord.Interaction, bet_id: str):
+    data = get_data()
+    target_user_key = None
+    found_bet = None
+
     is_admin = interaction.user.guild_permissions.administrator
     staff_roles = ['mod', 'moderator', 'staff', 'admin']
     is_staff = any(role.name.lower() in staff_roles for role in interaction.user.roles)
 
-    if target_user != interaction.user and not (is_admin or is_staff):
-        return await interaction.response.send_message("❌ You don't have permission to remove someone else's bet.", ephemeral=True)
+    # Search the whole server for the ID so you don't have to tag the user
+    guild_prefix = f"{interaction.guild.id}_"
+    for key, bets in data.items():
+        if key.startswith(guild_prefix):
+            found_bet = next((b for b in bets if b['bet_id'] == bet_id), None)
+            if found_bet:
+                target_user_key = key
+                break
 
-    user_key = f"{interaction.guild.id}_{target_user.id}"
-    data = get_data()
-    
-    if user_key not in data:
-        return await interaction.response.send_message("No history found for this user.", ephemeral=True)
-    
-    original_list = data[user_key]
-    new_list = [b for b in original_list if b['bet_id'] != bet_id]
-    
-    if len(original_list) == len(new_list):
-        return await interaction.response.send_message(f"Could not find bet ID `{bet_id}` for this user.", ephemeral=True)
-  
-    data[user_key] = new_list
-    if not data[user_key]: del data[user_key]
+    if not found_bet:
+        return await interaction.response.send_message(f"❌ Could not find bet ID `{bet_id}`.", ephemeral=True)
+
+    bet_owner_id = target_user_key.split("_")[1]
+    if not (str(interaction.user.id) == bet_owner_id or is_admin or is_staff):
+        return await interaction.response.send_message("❌ No permission.", ephemeral=True)
+
+    data[target_user_key] = [b for b in data[target_user_key] if b['bet_id'] != bet_id]
+    if not data[target_user_key]: del data[target_user_key]
     save_data(data)
-    
-    await interaction.response.send_message(f"✅ Bet `{bet_id}` has been removed.", ephemeral=True)
+    await interaction.response.send_message(f"✅ Bet `{bet_id}` removed.", ephemeral=True)
 
 @bot.tree.command(name="editbet", description="Edit a bet's details. Staff can edit anyone's bet.")
 @app_commands.describe(sport="The corrected sport/league for this bet", user="Optional: Tag a user if you are staff editing their bet")

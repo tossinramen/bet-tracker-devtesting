@@ -208,17 +208,20 @@ async def bet(interaction: discord.Interaction, sport: Choice[str], pick: str, u
     })
     save_data(data)
 
-    file = discord.File("gdenimg.jpg", filename="gdenimg.jpg")
-    embed = discord.Embed(color=discord.Color.red(), timestamp=interaction.created_at)
-    embed.set_author(name=f"{interaction.user.display_name}'s {sport.value} Bet", icon_url=interaction.user.display_avatar.url)
-    embed.set_thumbnail(url="attachment://gdenimg.jpg")
 
-    embed.add_field(name="🏆 EVENT", value=f"`{pick}`", inline=True)
-    embed.add_field(name="💰 WAGER", value=f"`{units}u`", inline=True)
-    embed.add_field(name="📈 ODDS", value=f"`{display_odds}`", inline=True)
-    embed.set_footer(text=f"ID: {bet_id}")
+    embed = discord.Embed(
+        color=discord.Color.red(),
+    
+        description=f"**{pick}** •  `{units}u`  •  `{display_odds}`"
+    )
+    
+    embed.set_author(
+        name=f"{interaction.user.display_name}'s {sport.value} Bet", 
+        icon_url=interaction.user.display_avatar.url
+    )
+    embed.set_footer(text=f"ID: {bet_id} • {interaction.created_at.strftime('%I:%M %p')}")
 
-    await interaction.followup.send(file=file, embed=embed)
+    await interaction.followup.send(embed=embed)
 
 @bot.event
 async def on_raw_reaction_add(payload):

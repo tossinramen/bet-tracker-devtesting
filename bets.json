@@ -384,6 +384,54 @@
             "profit": 0.0,
             "user_name": "tahjoker",
             "timestamp": "2026-03-25T04:18:47.067475"
+        },
+        {
+            "bet_id": "5d5e0bc5",
+            "sport": "Basketball",
+            "pick": "Celtics ML",
+            "units": 1.0,
+            "odds": 1.89,
+            "original_odds": 1.89,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker",
+            "timestamp": "2026-03-26T01:35:26.111580"
+        },
+        {
+            "bet_id": "09de3bf0",
+            "sport": "Val",
+            "pick": "DRX Map 1 ML",
+            "units": 1.0,
+            "odds": 1.8,
+            "original_odds": 1.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker",
+            "timestamp": "2026-03-26T01:38:33.193733"
+        },
+        {
+            "bet_id": "e4889127",
+            "sport": "LCK",
+            "pick": "DRX ML",
+            "units": 1.0,
+            "odds": 1.8,
+            "original_odds": 1.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker",
+            "timestamp": "2026-03-26T01:41:13.335553"
+        },
+        {
+            "bet_id": "b187795d",
+            "sport": "LCS",
+            "pick": "C9 ML IWD IS A FUCKING CUCK",
+            "units": 1.0,
+            "odds": 1.6,
+            "original_odds": 1.6,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker",
+            "timestamp": "2026-03-26T01:43:58.454281"
         }
     ],
     "1485941195128701082_469312558709342208": [

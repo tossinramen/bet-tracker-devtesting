@@ -528,6 +528,18 @@
             "profit": 0.0,
             "user_name": "tahjoker",
             "timestamp": "2026-04-02T17:09:14.797013"
+        },
+        {
+            "bet_id": "2793ff35",
+            "sport": "Basketball",
+            "pick": "GSW ML",
+            "units": 1.0,
+            "odds": 2.0,
+            "original_odds": 2.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker",
+            "timestamp": "2026-04-02T17:16:41.780587"
         }
     ],
     "1485941195128701082_469312558709342208": [
@@ -641,5 +653,10 @@
             "user_name": "Moony",
             "timestamp": "2026-04-02T17:09:53.002263"
         }
-    ]
+    ],
+    "__tails__": {
+        "1485941195128701082_213114196060143618": [
+            "469312558709342208"
+        ]
+    }
 }

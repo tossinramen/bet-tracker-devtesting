@@ -420,6 +420,13 @@ async def bet(interaction: discord.Interaction, sport: Choice[str], pick: str, u
 
     await interaction.followup.send(embed=embed)
 
+    tailers = data.get("__tails__", {}).get(user_key, [])
+    if tailers:
+        mentions = " ".join(f"<@{tid}>" for tid in tailers)
+        await interaction.followup.send(
+            f"📣 {mentions} — **{interaction.user.display_name}** just posted a **{sport.value}** bet!"
+        )
+
 @bot.event
 async def on_raw_reaction_add(payload):
     if payload.user_id == bot.user.id: return
@@ -968,7 +975,9 @@ async def help(interaction: discord.Interaction):
         "⏳ **/pending (@user)**\n"
         "View and settle a user's pending bets with interactive buttons. Defaults to yourself.\n\n"
         "📋 **/pendingall**\n"
-        "View all pending bets across the server. Anyone can browse; only admins/staff can settle."
+        "View all pending bets across the server. Anyone can browse; only admins/staff can settle.\n\n"
+        "🔔 **/tail @user**\n"
+        "Get mentioned whenever that user posts a bet. Run again on the same user to untail."
     )
     embed.add_field(name="🚀 Available Commands", value=all_cmds, inline=False)
 
@@ -1032,5 +1041,34 @@ async def pendingall(interaction: discord.Interaction):
     view = PendingBetView(pending_bets, interaction.user, admin_only_settle=True)
     msg = await interaction.followup.send(embed=view.create_embed(), view=view)
     view.message = msg
+
+@bot.tree.command(name="tail", description="Get mentioned whenever a user posts a new bet")
+@app_commands.describe(user="The bettor you want to follow (run again to untail)")
+async def tail(interaction: discord.Interaction, user: discord.Member):
+    if user.id == interaction.user.id:
+        return await interaction.response.send_message("❌ You can't tail yourself.", ephemeral=True)
+    if user.bot:
+        return await interaction.response.send_message("❌ You can't tail a bot.", ephemeral=True)
+
+    data = get_data()
+    tails = data.setdefault("__tails__", {})
+    tail_key = f"{interaction.guild.id}_{user.id}"
+    tailer_id = str(interaction.user.id)
+    tailers = tails.setdefault(tail_key, [])
+
+    if tailer_id in tailers:
+        tailers.remove(tailer_id)
+        if not tailers:
+            del tails[tail_key]
+        save_data(data)
+        await interaction.response.send_message(
+            f"🔕 You are no longer tailing **{user.display_name}**.", ephemeral=True
+        )
+    else:
+        tailers.append(tailer_id)
+        save_data(data)
+        await interaction.response.send_message(
+            f"🔔 You are now tailing **{user.display_name}**! You'll be mentioned every time they post a bet.", ephemeral=True
+        )
 
 bot.run(token)

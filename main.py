@@ -177,6 +177,203 @@ class HistoryPaginator(ui.View):
             self.current_page += 1
             await interaction.response.edit_message(embed=self.create_embed(), view=self)
 
+class CashoutModal(ui.Modal, title="Cash Out Bet"):
+    payout = ui.TextInput(
+        label="Payout Amount (total units received)",
+        placeholder="e.g. 1.8 — leave blank if using odds",
+        required=False,
+        max_length=10
+    )
+    cashout_odds = ui.TextInput(
+        label="Cashout Odds (decimal)",
+        placeholder="e.g. 1.5 — leave blank if using payout",
+        required=False,
+        max_length=10
+    )
+
+    def __init__(self, view: "PendingBetView", entry: dict):
+        super().__init__()
+        self.pending_view = view
+        self.entry = entry
+
+    async def on_submit(self, interaction: discord.Interaction):
+        bet = self.entry['bet']
+        user_key = self.entry['user_key']
+        original_stake = float(bet['units'])
+
+        payout_val = self.payout.value.strip()
+        odds_val = self.cashout_odds.value.strip()
+
+        if payout_val:
+            try:
+                payout_amount = float(payout_val)
+                actual_profit = round(payout_amount - original_stake, 2)
+                display_val = f"{payout_amount}u Payout"
+            except ValueError:
+                return await interaction.response.send_message("❌ Invalid payout amount.", ephemeral=True)
+        elif odds_val:
+            try:
+                co = float(odds_val)
+                actual_profit = round((original_stake * co) - original_stake, 2)
+                display_val = f"{co} Odds"
+            except ValueError:
+                return await interaction.response.send_message("❌ Invalid odds value.", ephemeral=True)
+        else:
+            return await interaction.response.send_message("❌ Provide either a payout amount or odds.", ephemeral=True)
+
+        data = get_data()
+        for b in data.get(user_key, []):
+            if b['bet_id'] == bet['bet_id']:
+                b['status'] = "Cashed Out"
+                b['profit'] = actual_profit
+                break
+        save_data(data)
+
+        bet_id = bet['bet_id']
+        self.pending_view.pending_bets.pop(self.pending_view.current_index)
+        if self.pending_view.current_index >= len(self.pending_view.pending_bets):
+            self.pending_view.current_index = max(0, len(self.pending_view.pending_bets) - 1)
+
+        pnl_str = f"{'+' if actual_profit > 0 else ''}{actual_profit}u"
+        await interaction.response.defer()
+
+        if not self.pending_view.pending_bets:
+            await self.pending_view.message.edit(
+                content=f"💰 Bet `{bet_id}` cashed out ({pnl_str}). No more pending bets!",
+                embed=None, view=None
+            )
+        else:
+            await self.pending_view.message.edit(
+                content=f"💰 Bet `{bet_id}` cashed out ({pnl_str}).",
+                embed=self.pending_view.create_embed(),
+                view=self.pending_view
+            )
+
+class PendingBetView(ui.View):
+    def __init__(self, pending_bets: list, invoker: discord.Member, admin_only_settle: bool = False):
+        super().__init__(timeout=180)
+        self.pending_bets = pending_bets
+        self.current_index = 0
+        self.invoker = invoker
+        self.admin_only_settle = admin_only_settle
+        self.message = None
+
+    def can_settle(self, member: discord.Member, user_key: str) -> bool:
+        is_admin = member.guild_permissions.administrator
+        staff_roles = ['mod', 'moderator', 'staff', 'admin']
+        is_staff = any(r.name.lower() in staff_roles for r in member.roles)
+        is_owner = str(member.id) in user_key
+        if self.admin_only_settle:
+            return is_admin or is_staff
+        return is_owner or is_admin or is_staff
+
+    def create_embed(self) -> discord.Embed:
+        if not self.pending_bets:
+            return discord.Embed(description="No pending bets.", color=discord.Color.green())
+
+        entry = self.pending_bets[self.current_index]
+        bet = entry['bet']
+        total = len(self.pending_bets)
+        display_odds = format_odds(float(bet.get('original_odds', bet['odds'])))
+
+        embed = discord.Embed(color=discord.Color.orange())
+        embed.set_author(name=f"⏳ {entry['display_name']}'s Pending Bet")
+        embed.description = (
+            f"**Pick:** {bet.get('pick', 'Unknown')}\n"
+            f"**Sport:** {bet.get('sport', 'Unknown')}\n"
+            f"**Odds:** `{display_odds}`\n"
+            f"**Wager:** `{bet['units']}u`"
+        )
+
+        ts = bet.get('timestamp', '')
+        footer_base = f"Bet {self.current_index + 1} of {total}  •  ID: {bet['bet_id']}"
+        if ts:
+            try:
+                dt = datetime.datetime.fromisoformat(ts)
+                embed.set_footer(text=f"{footer_base}  •  {dt.strftime('%b %d, %I:%M %p')}")
+            except Exception:
+                embed.set_footer(text=footer_base)
+        else:
+            embed.set_footer(text=footer_base)
+
+        return embed
+
+    async def _settle(self, interaction: discord.Interaction, status: str, profit: float):
+        entry = self.pending_bets[self.current_index]
+        user_key = entry['user_key']
+        bet = entry['bet']
+
+        if not self.can_settle(interaction.user, user_key):
+            return await interaction.response.send_message(
+                "❌ You don't have permission to settle this bet.", ephemeral=True
+            )
+
+        data = get_data()
+        for b in data.get(user_key, []):
+            if b['bet_id'] == bet['bet_id']:
+                b['status'] = status
+                b['profit'] = profit
+                break
+        save_data(data)
+
+        bet_id = bet['bet_id']
+        self.pending_bets.pop(self.current_index)
+        if self.current_index >= len(self.pending_bets):
+            self.current_index = max(0, len(self.pending_bets) - 1)
+
+        pnl_str = f"{'+' if profit > 0 else ''}{profit}u"
+
+        if not self.pending_bets:
+            await interaction.response.edit_message(
+                content=f"✅ Bet `{bet_id}` settled as **{status}** ({pnl_str}). No more pending bets!",
+                embed=None, view=None
+            )
+            return
+
+        await interaction.response.edit_message(
+            content=f"✅ Bet `{bet_id}` settled as **{status}** ({pnl_str}).",
+            embed=self.create_embed(),
+            view=self
+        )
+
+    @ui.button(label="✅ Win", style=discord.ButtonStyle.success, row=0)
+    async def win_btn(self, interaction: discord.Interaction, button: ui.Button):
+        entry = self.pending_bets[self.current_index]
+        bet = entry['bet']
+        profit = round((float(bet['units']) * float(bet['odds'])) - float(bet['units']), 2)
+        await self._settle(interaction, "Win", profit)
+
+    @ui.button(label="❌ Loss", style=discord.ButtonStyle.danger, row=0)
+    async def loss_btn(self, interaction: discord.Interaction, button: ui.Button):
+        entry = self.pending_bets[self.current_index]
+        profit = -float(entry['bet']['units'])
+        await self._settle(interaction, "Loss", profit)
+
+    @ui.button(label="⏹️ Void", style=discord.ButtonStyle.secondary, row=0)
+    async def void_btn(self, interaction: discord.Interaction, button: ui.Button):
+        await self._settle(interaction, "Void", 0.0)
+
+    @ui.button(label="💰 Cash Out", style=discord.ButtonStyle.primary, row=0)
+    async def cashout_btn(self, interaction: discord.Interaction, button: ui.Button):
+        entry = self.pending_bets[self.current_index]
+        if not self.can_settle(interaction.user, entry['user_key']):
+            return await interaction.response.send_message(
+                "❌ You don't have permission to settle this bet.", ephemeral=True
+            )
+        await interaction.response.send_modal(CashoutModal(self, entry))
+
+    @ui.button(label="⬅️ Prev", style=discord.ButtonStyle.gray, row=1)
+    async def prev_btn(self, interaction: discord.Interaction, button: ui.Button):
+        if self.current_index > 0:
+            self.current_index -= 1
+        await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
+    @ui.button(label="Next ➡️", style=discord.ButtonStyle.gray, row=1)
+    async def next_btn(self, interaction: discord.Interaction, button: ui.Button):
+        if self.current_index < len(self.pending_bets) - 1:
+            self.current_index += 1
+        await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
 # --- BOT SETUP ---
 class MyBot(commands.Bot):
     def __init__(self):
@@ -776,5 +973,54 @@ async def help(interaction: discord.Interaction):
     embed.set_footer(text="Tip: Use the Bet ID found at the bottom of every slip for edits/removals.")
 
     await interaction.response.send_message(embed=embed)
+
+@bot.tree.command(name="pending", description="View and settle a user's pending bets")
+@app_commands.describe(user="The user to check (defaults to yourself)")
+async def pending(interaction: discord.Interaction, user: discord.Member = None):
+    await interaction.response.defer()
+    target = user or interaction.user
+    data = get_data()
+    user_key = f"{interaction.guild.id}_{target.id}"
+
+    pending_bets = [
+        {'user_key': user_key, 'bet': b, 'display_name': target.display_name}
+        for b in data.get(user_key, []) if b.get('status') == 'Pending'
+    ]
+
+    if not pending_bets:
+        return await interaction.followup.send(
+            f"No pending bets for {target.display_name}.", ephemeral=True
+        )
+
+    view = PendingBetView(pending_bets, interaction.user, admin_only_settle=False)
+    msg = await interaction.followup.send(embed=view.create_embed(), view=view)
+    view.message = msg
+
+@bot.tree.command(name="pendingall", description="View all pending bets across the server")
+async def pendingall(interaction: discord.Interaction):
+    await interaction.response.defer()
+    data = get_data()
+    guild_prefix = f"{interaction.guild.id}_"
+
+    pending_bets = []
+    for key, bets in data.items():
+        if not key.startswith(guild_prefix):
+            continue
+        for b in bets:
+            if b.get('status') == 'Pending':
+                pending_bets.append({
+                    'user_key': key,
+                    'bet': b,
+                    'display_name': b.get('user_name', 'Unknown')
+                })
+
+    pending_bets.sort(key=lambda x: x['bet'].get('timestamp', ''))
+
+    if not pending_bets:
+        return await interaction.followup.send("No pending bets on this server.", ephemeral=True)
+
+    view = PendingBetView(pending_bets, interaction.user, admin_only_settle=True)
+    msg = await interaction.followup.send(embed=view.create_embed(), view=view)
+    view.message = msg
 
 bot.run(token)

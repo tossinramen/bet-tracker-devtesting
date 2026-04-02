@@ -559,10 +559,11 @@ class LeaderboardView(ui.View):
             winrate = round((wins / total_settled) * 100, 1) if total_settled > 0 else 0
             roi = round((total_pnl / total_staked) * 100, 1) if total_staked > 0 else 0
             
+            avg_units = round(sum(float(b["units"]) for b in filtered_bets) / len(filtered_bets), 2) if filtered_bets else 0
             user_name = filtered_bets[0].get("user_name", "Unknown User")
             server_stats.append({
                 "name": user_name, "pnl": total_pnl, "record": f"{wins}W-{losses}L",
-                "winrate": winrate, "roi": roi
+                "winrate": winrate, "roi": roi, "avg_units": avg_units
             })
 
         server_stats.sort(key=lambda x: x["pnl"], reverse=True)
@@ -584,7 +585,7 @@ class LeaderboardView(ui.View):
         for i, user in enumerate(page_stats, start + 1):
             medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"**#{i}**"
             pnl_display = f"+{user['pnl']}u" if user['pnl'] > 0 else f"{user['pnl']}u"
-            stats_line = f"`{user['record']}` | `{user['winrate']}%` | `{user['roi']}% ROI`"
+            stats_line = f"`{user['record']}` | `{user['winrate']}%` | `{user['roi']}% ROI` | `{user['avg_units']}u avg`"
             leaderboard_text += f"{medal} **{user['name']}**: **{pnl_display}**\n╰ {stats_line}\n"
         
         embed.add_field(name="Rankings", value=leaderboard_text or "No data for this period.", inline=False)
@@ -838,21 +839,26 @@ async def profile(interaction: discord.Interaction, user: discord.Member = None)
     wins = len([b for b in settled_bets if b['status'] == "Win"])
     losses = len([b for b in settled_bets if b['status'] == "Loss"])
     total_pnl = round(sum(float(b['profit']) for b in user_bets), 2)
-    
+    pending_count = len([b for b in user_bets if b.get('status') == 'Pending'])
+
     total_staked = sum(float(b['units']) for b in user_bets if b['status'] in ["Win", "Loss", "Cashed Out"])
     wr = round((wins / len(settled_bets) * 100), 1) if settled_bets else 0
     roi = round((total_pnl / total_staked * 100), 1) if total_staked > 0 else 0
     avg_odds = round(sum(float(b['odds']) for b in user_bets) / len(user_bets), 2) if user_bets else 0
+    avg_units = round(sum(float(b['units']) for b in user_bets) / len(user_bets), 2) if user_bets else 0
 
     embed = discord.Embed(title=f"👤 {target_user.display_name.upper()}'S BETTING PROFILE", color=discord.Color.red())
     embed.set_thumbnail(url=target_user.display_avatar.url)
+
+    if pending_count > 0:
+        embed.description = f"⏳ **{pending_count} pending bet{'s' if pending_count != 1 else ''}**"
 
     embed.add_field(name="📊 RECORD", value=f"`{wins}W-{losses}L`", inline=True)
     embed.add_field(name="🎯 WINRATE", value=f"`{wr}%`", inline=True)
     embed.add_field(name="💰 P/L", value=f"`{total_pnl}u`", inline=True)
     embed.add_field(name="📈 ROI", value=f"`{roi}%`", inline=True)
     embed.add_field(name="🎲 AVG ODDS", value=f"`{avg_odds}`", inline=True)
-    embed.add_field(name="\u200b", value="\u200b", inline=True) # Spacer
+    embed.add_field(name="📦 AVG UNITS", value=f"`{avg_units}u`", inline=True)
 
 
     sport_stats = ""
@@ -958,7 +964,11 @@ async def help(interaction: discord.Interaction):
         "🗑️ **/removebet [id]**\n"
         "Delete a specific bet. Can also use poop emoji on the slip.\n\n"
         "💰 **/pnl**\n"
-        "Quick check of your total units won/lost and overall record."
+        "Quick check of your total units won/lost and overall record.\n\n"
+        "⏳ **/pending (@user)**\n"
+        "View and settle a user's pending bets with interactive buttons. Defaults to yourself.\n\n"
+        "📋 **/pendingall**\n"
+        "View all pending bets across the server. Anyone can browse; only admins/staff can settle."
     )
     embed.add_field(name="🚀 Available Commands", value=all_cmds, inline=False)
 

@@ -540,6 +540,18 @@
             "profit": 0.0,
             "user_name": "tahjoker",
             "timestamp": "2026-04-02T17:16:41.780587"
+        },
+        {
+            "bet_id": "650fa030",
+            "sport": "Basketball",
+            "pick": "Clippers ML",
+            "units": 1.0,
+            "odds": 3.0,
+            "original_odds": 3.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "tahjoker",
+            "timestamp": "2026-04-02T17:22:42.070462"
         }
     ],
     "1485941195128701082_469312558709342208": [

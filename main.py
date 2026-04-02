@@ -421,11 +421,21 @@ async def bet(interaction: discord.Interaction, sport: Choice[str], pick: str, u
     await interaction.followup.send(embed=embed)
 
     tailers = data.get("__tails__", {}).get(user_key, [])
-    if tailers:
-        mentions = " ".join(f"<@{tid}>" for tid in tailers)
-        await interaction.followup.send(
-            f"📣 {mentions} — **{interaction.user.display_name}** just posted a **{sport.value}** bet!"
-        )
+    for tailer_id in tailers:
+        try:
+            tailer = await bot.fetch_user(int(tailer_id))
+            dm_embed = discord.Embed(
+                color=discord.Color.red(),
+                description=f"**{pick}** • `{units}u` • `{display_odds}`"
+            )
+            dm_embed.set_author(
+                name=f"📣 {interaction.user.display_name} just posted a {sport.value} bet!",
+                icon_url=interaction.user.display_avatar.url
+            )
+            dm_embed.set_footer(text=f"ID: {bet_id}")
+            await tailer.send(embed=dm_embed)
+        except Exception:
+            pass
 
 @bot.event
 async def on_raw_reaction_add(payload):
@@ -977,7 +987,7 @@ async def help(interaction: discord.Interaction):
         "📋 **/pendingall**\n"
         "View all pending bets across the server. Anyone can browse; only admins/staff can settle.\n\n"
         "🔔 **/tail @user**\n"
-        "Get mentioned whenever that user posts a bet. Run again on the same user to untail."
+        "Get a private DM whenever that user posts a bet. Run again on the same user to untail."
     )
     embed.add_field(name="🚀 Available Commands", value=all_cmds, inline=False)
 
@@ -1068,7 +1078,7 @@ async def tail(interaction: discord.Interaction, user: discord.Member):
         tailers.append(tailer_id)
         save_data(data)
         await interaction.response.send_message(
-            f"🔔 You are now tailing **{user.display_name}**! You'll be mentioned every time they post a bet.", ephemeral=True
+            f"🔔 You are now tailing **{user.display_name}**! You'll receive a DM every time they post a bet.", ephemeral=True
         )
 
 bot.run(token)

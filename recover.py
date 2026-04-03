@@ -15,9 +15,9 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # --- CONFIGURATION (Change these as needed) ---
-TARGET_CHANNEL_ID = 1485941196000985191  # Update this for each channel run
-BOT_APP_ID = 1486064350258004088
-SERVER_ID = "1485941195128701082"        # Your 500-member Server ID
+TARGET_CHANNEL_ID = 1453406774458847417  # Update this for each channel run
+BOT_APP_ID = 1485938016437407824
+SERVER_ID = "1432450864974532892"        # Your 500-member Server ID
 FILENAME = 'scraped_bets.json'           # The file that gathers all results
 # ---------------------------------------------
 

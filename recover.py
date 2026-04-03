@@ -9,11 +9,17 @@ load_dotenv()
 
 intents = discord.Intents.default()
 intents.message_content = True
+# If your bot needs to see members to resolve IDs, this is good to have on
+intents.members = True 
+
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Updated to your new test-scraper channel
-TARGET_CHANNEL_ID = 1489624493834899536
+# --- CONFIGURATION (Change these as needed) ---
+TARGET_CHANNEL_ID = 1485941196000985191  # Update this for each channel run
 BOT_APP_ID = 1486064350258004088
+SERVER_ID = "1485941195128701082"        # Your 500-member Server ID
+FILENAME = 'scraped_bets.json'           # The file that gathers all results
+# ---------------------------------------------
 
 REACTION_MAP = {
     "✅": "Win",
@@ -31,36 +37,61 @@ def calculate_profit(status, units, odds):
 
 @bot.event
 async def on_ready():
-    print(f'Logged in. Re-scanning channel: {TARGET_CHANNEL_ID}...')
-    channel = bot.get_channel(TARGET_CHANNEL_ID)
+    print(f'Logged in as {bot.user}.')
+    print(f'Scanning Channel: {TARGET_CHANNEL_ID} in Server: {SERVER_ID}...')
     
+    channel = bot.get_channel(TARGET_CHANNEL_ID)
     if not channel:
-        print("Error: Could not find channel. Check permissions!")
+        print("Error: Could not find channel. Check permissions/ID!")
         await bot.close()
         return
 
-    scraped_bets = []
+    # 1. Load existing data so we can APPEND to it
+    if os.path.exists(FILENAME):
+        with open(FILENAME, 'r') as f:
+            try:
+                master_data = json.load(f)
+            except json.JSONDecodeError:
+                master_data = {}
+    else:
+        master_data = {}
+
+    new_count = 0
 
     async for message in channel.history(limit=None, oldest_first=True):
-        # Only look at the bot's own messages with embeds
+        # Filter for your bot's messages that have embeds
         if message.author.id == BOT_APP_ID and message.embeds:
             embed = message.embeds[0]
             
-            # Defensive check: skip if embed is missing title or description
+            # Defensive check
             if not embed.author or not embed.author.name or not embed.description:
                 continue
             
             try:
-                # --- 1. CLEANING STRINGS ---
+                # --- A. Get the User ID from Interaction Metadata ---
+                user_id = None
+                if message.interaction_metadata:
+                    user_id = message.interaction_metadata.user.id
+                
+                # If no metadata, we skip it (too old or not a slash command)
+                if not user_id:
+                    continue
+
+                # Create the key: ServerID_UserID
+                user_key = f"{SERVER_ID}_{user_id}"
+
+                # --- B. Clean Strings & Parse Embed ---
                 title = embed.author.name.replace("**", "")
-                user_match = re.search(r"^(.*?)'s (.*?) Bet", title)
-                user_name = user_match.group(1).strip() if user_match else "Unknown"
-                sport = user_match.group(2).strip() if user_match else "Unknown"
+                # Extracts 'tahjoker' from "tahjoker's Basketball Bet"
+                user_name = title.split("'s")[0].strip()
+                
+                # Extract sport name
+                sport_match = re.search(r"'s (.*?) Bet", title)
+                sport = sport_match.group(1).strip() if sport_match else "Unknown"
 
                 desc = embed.description.replace("**", "")
                 parts = [p.strip() for p in desc.split('•')]
                 
-                # Ensure we have Pick, Units, and Odds parts
                 if len(parts) < 3:
                     continue
 
@@ -72,7 +103,7 @@ async def on_ready():
                 footer = embed.footer.text if embed.footer else ""
                 bet_id = footer.split('•')[0].replace("ID:", "").strip() if footer else "Unknown"
 
-                # --- 2. REACTION CHECK ---
+                # --- C. Check Reactions for Settlement ---
                 status = "Pending"
                 for reaction in message.reactions:
                     emoji_str = str(reaction.emoji)
@@ -84,7 +115,7 @@ async def on_ready():
                 if status == "Delete":
                     continue
 
-                # --- 3. TIMESTAMP ---
+                # --- D. Format Timestamp (UTC to String) ---
                 timestamp = message.created_at.replace(tzinfo=None).isoformat()
 
                 bet_data = {
@@ -99,17 +130,25 @@ async def on_ready():
                     "user_name": user_name,
                     "timestamp": timestamp
                 }
-                scraped_bets.append(bet_data)
-                print(f"Recovered: {bet_id} ({pick}) - {status}")
+
+                # --- E. Add to the Dictionary ---
+                if user_key not in master_data:
+                    master_data[user_key] = []
+                
+                # Prevent duplicates if running same channel twice
+                if not any(b['bet_id'] == bet_id for b in master_data[user_key]):
+                    master_data[user_key].append(bet_data)
+                    new_count += 1
 
             except Exception as e:
                 print(f"Skipping message {message.id} | Reason: {e}")
 
-    # Final Save
-    with open('scraped_bets.json', 'w') as f:
-        json.dump(scraped_bets, f, indent=4)
+    # 2. Final Save
+    with open(FILENAME, 'w') as f:
+        json.dump(master_data, f, indent=4)
     
-    print(f"\nSuccess! Recovered {len(scraped_bets)} bets to scraped_bets.json")
+    print(f"\nSuccess! Added {new_count} new bets.")
+    print(f"Total users tracked in file: {len(master_data)}")
     await bot.close()
 
 bot.run(os.getenv('DISCORD_TOKEN'))

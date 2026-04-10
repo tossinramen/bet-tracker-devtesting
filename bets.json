@@ -19277,8 +19277,8 @@
             "units": 10.0,
             "odds": 1.72,
             "original_odds": -138.0,
-            "status": "Pending",
-            "profit": 0.0,
+            "status": "Loss",
+            "profit": -10.0,
             "user_name": "Poopstink",
             "timestamp": "2026-04-10T19:08:41.142292"
         },
@@ -23365,8 +23365,8 @@
             "units": 0.25,
             "odds": 3.22,
             "original_odds": 222.0,
-            "status": "Pending",
-            "profit": 0.0,
+            "status": "Loss",
+            "profit": -0.25,
             "user_name": "Revived",
             "timestamp": "2026-04-09T12:15:41.751379"
         },
@@ -23497,8 +23497,8 @@
             "units": 1.0,
             "odds": 1.52,
             "original_odds": -192.0,
-            "status": "Pending",
-            "profit": 0.0,
+            "status": "Win",
+            "profit": 0.52,
             "user_name": "Revived",
             "timestamp": "2026-04-10T14:08:40.242695"
         },
@@ -23509,8 +23509,8 @@
             "units": 1.0,
             "odds": 1.68,
             "original_odds": -147.0,
-            "status": "Pending",
-            "profit": 0.0,
+            "status": "Win",
+            "profit": 0.68,
             "user_name": "Revived",
             "timestamp": "2026-04-10T14:31:24.803325"
         },
@@ -23657,6 +23657,66 @@
             "profit": -1.0,
             "user_name": "Revived",
             "timestamp": "2026-03-25T22:43:33.899000"
+        },
+        {
+            "bet_id": "84bfc775",
+            "sport": "Baseball",
+            "pick": "NYY ML",
+            "units": 1.0,
+            "odds": 1.93,
+            "original_odds": -108.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Revived",
+            "timestamp": "2026-04-10T20:48:53.676329"
+        },
+        {
+            "bet_id": "d3bed2b3",
+            "sport": "Baseball",
+            "pick": "BOS ML",
+            "units": 1.0,
+            "odds": 1.77,
+            "original_odds": -130.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Revived",
+            "timestamp": "2026-04-10T20:49:14.503403"
+        },
+        {
+            "bet_id": "f3149a1c",
+            "sport": "Baseball",
+            "pick": "SD/COL o8",
+            "units": 1.0,
+            "odds": 1.86,
+            "original_odds": -116.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Revived",
+            "timestamp": "2026-04-10T20:49:58.059249"
+        },
+        {
+            "bet_id": "5c202828",
+            "sport": "Baseball",
+            "pick": "DET ML",
+            "units": 1.0,
+            "odds": 1.86,
+            "original_odds": -116.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Revived",
+            "timestamp": "2026-04-10T20:50:22.357071"
+        },
+        {
+            "bet_id": "cee6b6b4",
+            "sport": "Baseball",
+            "pick": "COL TTO 3.5",
+            "units": 1.0,
+            "odds": 1.87,
+            "original_odds": -115.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Revived",
+            "timestamp": "2026-04-10T20:56:10.970593"
         }
     ],
     "1432450864974532892_213114196060143618": [
@@ -25985,8 +26045,8 @@
             "units": 0.8,
             "odds": 2.28,
             "original_odds": 128.0,
-            "status": "Pending",
-            "profit": 0.0,
+            "status": "Win",
+            "profit": 1.02,
             "user_name": "JRoo",
             "timestamp": "2026-04-10T18:06:09.037605"
         }
@@ -28225,6 +28285,18 @@
             "profit": -0.8,
             "user_name": "Jackex",
             "timestamp": "2026-03-25T09:59:04.302000"
+        },
+        {
+            "bet_id": "0e1ca3d3",
+            "sport": "League",
+            "pick": "ctg m2(mtest)",
+            "units": 0.5,
+            "odds": 1.95,
+            "original_odds": 1.95,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jackexmodel V7.3.22",
+            "timestamp": "2026-04-10T20:58:36.536613"
         }
     ],
     "1432450864974532892_196858028568477696": [
@@ -29591,10 +29663,22 @@
             "units": 3.0,
             "odds": 2.48,
             "original_odds": 2.48,
+            "status": "Win",
+            "profit": 4.44,
+            "user_name": "Ryc(free 200$ bitcoin in Bio)",
+            "timestamp": "2026-04-10T19:12:24.349333"
+        },
+        {
+            "bet_id": "287fd029",
+            "sport": "Val",
+            "pick": "kru map 1",
+            "units": 1.0,
+            "odds": 1.74,
+            "original_odds": 1.74,
             "status": "Pending",
             "profit": 0.0,
             "user_name": "Ryc(free 200$ bitcoin in Bio)",
-            "timestamp": "2026-04-10T19:12:24.349333"
+            "timestamp": "2026-04-10T21:13:01.319053"
         }
     ],
     "1432450864974532892_477445024536330250": [
@@ -30571,7 +30655,7 @@
             "units": 10.0,
             "odds": 6.0,
             "original_odds": 6.0,
-            "status": "Pending",
+            "status": "Void",
             "profit": 0.0,
             "user_name": "\ud83d\ude3f",
             "timestamp": "2026-04-03T09:36:51.548000"
@@ -31111,10 +31195,22 @@
             "units": 3.0,
             "odds": 1.34,
             "original_odds": 1.34,
-            "status": "Pending",
-            "profit": 0.0,
+            "status": "Win",
+            "profit": 1.02,
             "user_name": "\ud83d\ude3fodo",
             "timestamp": "2026-04-10T18:51:03.355413"
+        },
+        {
+            "bet_id": "a944d90b",
+            "sport": "League",
+            "pick": "citadel m1",
+            "units": 0.5,
+            "odds": 2.01,
+            "original_odds": 2.01,
+            "status": "Win",
+            "profit": 0.5,
+            "user_name": "\ud83d\ude3fodo",
+            "timestamp": "2026-04-10T20:11:19.289940"
         }
     ],
     "1432450864974532892_215689945044484096": [

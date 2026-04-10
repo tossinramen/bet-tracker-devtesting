@@ -14,7 +14,7 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # --- CONFIGURATION ---
-TARGET_CHANNEL_ID = 1481636340914196520  # Update this for each channel run
+TARGET_CHANNEL_ID = 1432451888451686551  # Update this for each channel run
 BOT_APP_ID = 1485938016437407824
 SERVER_ID = "1432450864974532892"
 FILENAME = "older_bets.json"

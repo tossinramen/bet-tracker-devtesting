@@ -2425,56 +2425,6 @@
             "timestamp": "2026-03-25T19:41:30.504000"
         }
     ],
-    "1432450864974532892_257552469851242497": [
-        {
-            "bet_id": "a3142644",
-            "sport": "Baseball",
-            "pick": "`New York Rangers ML + New York Yankees ML + Brooklyn Nets +12.5`",
-            "units": 0.5,
-            "odds": 6.1,
-            "original_odds": 6.1,
-            "status": "Pending",
-            "profit": 0.0,
-            "user_name": "JRoo",
-            "timestamp": "2026-03-25T20:32:26.415000"
-        },
-        {
-            "bet_id": "01cb9ccf",
-            "sport": "Basketball",
-            "pick": "`Miami Heat +3.5`",
-            "units": 1.1,
-            "odds": 1.91,
-            "original_odds": 1.91,
-            "status": "Pending",
-            "profit": 0.0,
-            "user_name": "JRoo",
-            "timestamp": "2026-03-25T20:34:01.871000"
-        },
-        {
-            "bet_id": "651b43f2",
-            "sport": "Baseball",
-            "pick": "`New York Rangers ML + New York Yankees ML + Brooklyn Nets +12.5`",
-            "units": 0.2,
-            "odds": 6.1,
-            "original_odds": 6.1,
-            "status": "Pending",
-            "profit": 0.0,
-            "user_name": "JRoo",
-            "timestamp": "2026-03-25T21:05:06.523000"
-        },
-        {
-            "bet_id": "173af2a7",
-            "sport": "Basketball",
-            "pick": "`Brooklyn Nets ML`",
-            "units": 1.12,
-            "odds": 1.89,
-            "original_odds": 1.89,
-            "status": "Win",
-            "profit": 1.0,
-            "user_name": "JRoo",
-            "timestamp": "2026-03-26T02:09:33.125000"
-        }
-    ],
     "1432450864974532892_unresolved_framemogger (doom lover)": [
         {
             "bet_id": "e375de2b",

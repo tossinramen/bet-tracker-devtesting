@@ -12,5 +12,205 @@
             "user_name": "booshh",
             "timestamp": "2026-03-25T09:43:59.127000"
         }
+    ],
+    "1432450864974532892_unresolved_zcriticus maximus homeless": [
+        {
+            "bet_id": "cdb549e2",
+            "sport": "CS2",
+            "pick": "`Tricked esport m1 ml`",
+            "units": 1.0,
+            "odds": 2.5,
+            "original_odds": 2.5,
+            "status": "Win",
+            "profit": 1.5,
+            "user_name": "Zcriticus maximus homeless",
+            "timestamp": "2026-03-25T15:26:33.794000"
+        },
+        {
+            "bet_id": "ce7998fa",
+            "sport": "Dota",
+            "pick": "`parivison vs gL o39.5`",
+            "units": 0.5,
+            "odds": 1.8,
+            "original_odds": 1.8,
+            "status": "Win",
+            "profit": 0.4,
+            "user_name": "Zcriticus maximus homeless",
+            "timestamp": "2026-03-25T18:24:31.483000"
+        },
+        {
+            "bet_id": "915840d6",
+            "sport": "CS2",
+            "pick": "`monte 1st half m1`",
+            "units": 1.0,
+            "odds": 1.65,
+            "original_odds": 1.65,
+            "status": "Win",
+            "profit": 0.65,
+            "user_name": "Zcriticus maximus homeless",
+            "timestamp": "2026-03-25T18:34:55.239000"
+        },
+        {
+            "bet_id": "118f4d49",
+            "sport": "Dota",
+            "pick": "`gamerlegion ml`",
+            "units": 0.2,
+            "odds": 3.2,
+            "original_odds": 3.2,
+            "status": "Loss",
+            "profit": -0.2,
+            "user_name": "Zcriticus maximus homeless",
+            "timestamp": "2026-03-25T18:54:27.337000"
+        },
+        {
+            "bet_id": "9ae21b3a",
+            "sport": "LEC",
+            "pick": "`solary+kcb m2`",
+            "units": 0.5,
+            "odds": 2.09,
+            "original_odds": 2.09,
+            "status": "Win",
+            "profit": 0.54,
+            "user_name": "Zcriticus maximus homeless",
+            "timestamp": "2026-03-25T19:04:52.486000"
+        },
+        {
+            "bet_id": "3d5147d1",
+            "sport": "Hockey",
+            "pick": "`Skellefte\u00e5 vs Malm\u00f6 DRAW`",
+            "units": 0.1,
+            "odds": 5.0,
+            "original_odds": 5.0,
+            "status": "Loss",
+            "profit": -0.1,
+            "user_name": "Zcriticus maximus homeless",
+            "timestamp": "2026-03-25T20:06:53.184000"
+        }
+    ],
+    "1432450864974532892_169825601551597577": [
+        {
+            "bet_id": "dfaa9835",
+            "sport": "CS2",
+            "pick": "`Heroic Yxngstxr Under 15.5`",
+            "units": 1.0,
+            "odds": 1.68,
+            "original_odds": 1.68,
+            "status": "Loss",
+            "profit": -1.0,
+            "user_name": "Matufarenzo",
+            "timestamp": "2026-03-25T15:37:09.084000"
+        },
+        {
+            "bet_id": "06defc99",
+            "sport": "CS2",
+            "pick": "`BIG faveN Under 15.5`",
+            "units": 1.0,
+            "odds": 1.75,
+            "original_odds": 1.75,
+            "status": "Win",
+            "profit": 0.75,
+            "user_name": "Matufarenzo",
+            "timestamp": "2026-03-25T20:31:29.274000"
+        }
+    ],
+    "1432450864974532892_353361532803088394": [
+        {
+            "bet_id": "d7de8b9b",
+            "sport": "Tennis",
+            "pick": "`Dodig+Pellegrino`",
+            "units": 1.0,
+            "odds": 2.0,
+            "original_odds": 2.0,
+            "status": "Loss",
+            "profit": -1.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-03-25T08:37:00.114000"
+        },
+        {
+            "bet_id": "361387b4",
+            "sport": "Tennis",
+            "pick": "`Sabalenka 2-0 + Rybakina`",
+            "units": 1.0,
+            "odds": 1.87,
+            "original_odds": 1.87,
+            "status": "Win",
+            "profit": 0.87,
+            "user_name": "Jakalo",
+            "timestamp": "2026-03-25T08:38:07.875000"
+        },
+        {
+            "bet_id": "525db08a",
+            "sport": "MMA",
+            "pick": "`Israel Adesanya`",
+            "units": 1.0,
+            "odds": 1.79,
+            "original_odds": 1.79,
+            "status": "Loss",
+            "profit": -1.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-03-25T08:39:09.702000"
+        },
+        {
+            "bet_id": "cae298df",
+            "sport": "MMA",
+            "pick": "`Yousri Belgaroui`",
+            "units": 1.0,
+            "odds": 2.05,
+            "original_odds": 2.05,
+            "status": "Win",
+            "profit": 1.05,
+            "user_name": "Jakalo",
+            "timestamp": "2026-03-25T09:00:19.554000"
+        },
+        {
+            "bet_id": "e2201126",
+            "sport": "Tennis",
+            "pick": "`Coco Gauff`",
+            "units": 1.5,
+            "odds": 1.88,
+            "original_odds": 1.88,
+            "status": "Win",
+            "profit": 1.32,
+            "user_name": "Jakalo",
+            "timestamp": "2026-03-25T13:29:05.097000"
+        },
+        {
+            "bet_id": "9e2aef1f",
+            "sport": "Tennis",
+            "pick": "`ryba -1.5 games`",
+            "units": 1.5,
+            "odds": 1.53,
+            "original_odds": 1.53,
+            "status": "Loss",
+            "profit": -1.5,
+            "user_name": "Jakalo",
+            "timestamp": "2026-03-25T15:03:16.258000"
+        },
+        {
+            "bet_id": "21b91ed5",
+            "sport": "Tennis",
+            "pick": "`lehecka -1.5 games + fils to win a set`",
+            "units": 1.0,
+            "odds": 1.72,
+            "original_odds": 1.72,
+            "status": "Win",
+            "profit": 0.72,
+            "user_name": "Jakalo",
+            "timestamp": "2026-03-25T18:35:00.447000"
+        }
+    ],
+    "1432450864974532892_177689847887167488": [
+        {
+            "bet_id": "57bbd31a",
+            "sport": "CS2",
+            "pick": "`gentlemates ml`",
+            "units": 10.0,
+            "odds": 1.85,
+            "original_odds": 1.85,
+            "status": "Loss",
+            "profit": -10.0,
+            "user_name": "Local BossManJack \ud83e\udd40",
+            "timestamp": "2026-03-25T21:23:35.595000"
+        }
     ]
 }

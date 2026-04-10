@@ -178,6 +178,82 @@ class HistoryPaginator(ui.View):
             self.current_page += 1
             await interaction.response.edit_message(embed=self.create_embed(), view=self)
 
+class EditBetModal(ui.Modal, title="Edit Bet"):
+    def __init__(self, view: "PendingBetView", entry: dict):
+        super().__init__()
+        self.pending_view = view
+        self.entry = entry
+        bet = entry['bet']
+
+        self.sport_input = ui.TextInput(
+            label="Sport",
+            default=str(bet.get('sport', '')),
+            max_length=50
+        )
+        self.pick_input = ui.TextInput(
+            label="Pick / Event",
+            default=str(bet.get('pick', '')),
+            max_length=200
+        )
+        self.units_input = ui.TextInput(
+            label="Units",
+            default=str(bet.get('units', '')),
+            max_length=10
+        )
+        self.odds_input = ui.TextInput(
+            label="Odds (decimal or American, e.g. 1.91 or -110)",
+            default=str(bet.get('original_odds', bet.get('odds', ''))),
+            max_length=10
+        )
+
+        self.add_item(self.sport_input)
+        self.add_item(self.pick_input)
+        self.add_item(self.units_input)
+        self.add_item(self.odds_input)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        bet = self.entry['bet']
+        user_key = self.entry['user_key']
+
+        try:
+            new_units = float(self.units_input.value.strip())
+        except ValueError:
+            return await interaction.response.send_message("❌ Invalid units value.", ephemeral=True)
+
+        try:
+            new_odds_raw = float(self.odds_input.value.strip())
+        except ValueError:
+            return await interaction.response.send_message("❌ Invalid odds value.", ephemeral=True)
+
+        new_sport = self.sport_input.value.strip()
+        new_pick = self.pick_input.value.strip()
+        new_decimal_odds = convert_to_decimal(new_odds_raw)
+
+        data = get_data()
+        for b in data.get(user_key, []):
+            if b['bet_id'] == bet['bet_id']:
+                b['sport'] = new_sport
+                b['pick'] = new_pick
+                b['units'] = new_units
+                b['odds'] = new_decimal_odds
+                b['original_odds'] = new_odds_raw
+                break
+        save_data(data)
+
+        # Update in-memory entry so the embed reflects the change immediately
+        bet['sport'] = new_sport
+        bet['pick'] = new_pick
+        bet['units'] = new_units
+        bet['odds'] = new_decimal_odds
+        bet['original_odds'] = new_odds_raw
+
+        await interaction.response.edit_message(
+            content=f"✏️ Bet `{bet['bet_id']}` updated.",
+            embed=self.pending_view.create_embed(),
+            view=self.pending_view
+        )
+
+
 class CashoutModal(ui.Modal, title="Cash Out Bet"):
     payout = ui.TextInput(
         label="Payout Amount (total units received)",
@@ -374,6 +450,15 @@ class PendingBetView(ui.View):
         if self.current_index < len(self.pending_bets) - 1:
             self.current_index += 1
         await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
+    @ui.button(label="✏️ Edit", style=discord.ButtonStyle.primary, row=1)
+    async def edit_btn(self, interaction: discord.Interaction, button: ui.Button):
+        entry = self.pending_bets[self.current_index]
+        if not self.can_settle(interaction.user, entry['user_key']):
+            return await interaction.response.send_message(
+                "❌ You don't have permission to edit this bet.", ephemeral=True
+            )
+        await interaction.response.send_modal(EditBetModal(self, entry))
 
 # --- BOT SETUP ---
 class MyBot(commands.Bot):

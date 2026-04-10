@@ -256,8 +256,8 @@ class EditBetModal(ui.Modal, title="Edit Bet"):
 
 class CashoutModal(ui.Modal, title="Cash Out Bet"):
     payout = ui.TextInput(
-        label="Payout Amount (total units received)",
-        placeholder="e.g. 1.8 — leave blank if using odds",
+        label="Profit / Loss (e.g. -0.5 or +1.8)",
+        placeholder="e.g. -0.5 — leave blank if using odds",
         required=False,
         max_length=10
     )
@@ -284,10 +284,10 @@ class CashoutModal(ui.Modal, title="Cash Out Bet"):
         if payout_val:
             try:
                 payout_amount = float(payout_val)
-                actual_profit = round(payout_amount - original_stake, 2)
-                display_val = f"{payout_amount}u Payout"
+                actual_profit = round(payout_amount, 2)
+                display_val = f"{payout_amount:+}u P/L"
             except ValueError:
-                return await interaction.response.send_message("❌ Invalid payout amount.", ephemeral=True)
+                return await interaction.response.send_message("❌ Invalid profit/loss amount.", ephemeral=True)
         elif odds_val:
             try:
                 co = float(odds_val)
@@ -882,7 +882,12 @@ async def editbet(interaction: discord.Interaction, bet_id: str, sport: Choice[s
     await interaction.channel.send(embed=embed)
     await interaction.followup.send(f"✅ Bet `{bet_id}` replaced with `{new_bet_id}`.", ephemeral=True)
 
-@bot.tree.command(name="cashout", description="Settle a bet early via payout amount or specific odds")
+@bot.tree.command(name="cashout", description="Settle a bet early via profit/loss amount or specific odds")
+@app_commands.describe(
+    bet_id="The ID of the bet to cash out",
+    payout_amount="Net profit/loss in units (e.g. -0.5 or +1.8)",
+    cashout_odds="Cashout odds in decimal (e.g. 1.5)"
+)
 async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: float = None, cashout_odds: float = None):
     user_key = f"{interaction.guild.id}_{interaction.user.id}"
     data = get_data()
@@ -897,8 +902,8 @@ async def cashout(interaction: discord.Interaction, bet_id: str, payout_amount: 
     original_stake = float(bet_to_pull["units"])
     
     if payout_amount is not None:
-        actual_profit = round(payout_amount - original_stake, 2)
-        display_val = f"{payout_amount}u Payout"
+        actual_profit = round(payout_amount, 2)
+        display_val = f"{payout_amount:+}u P/L"
     elif cashout_odds is not None:
         actual_profit = round((original_stake * cashout_odds) - original_stake, 2)
         display_val = f"{cashout_odds} Odds"

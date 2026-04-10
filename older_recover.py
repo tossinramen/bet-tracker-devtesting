@@ -14,7 +14,7 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # --- CONFIGURATION ---
-TARGET_CHANNEL_ID = 1432451888451686551  # Update this for each channel run
+TARGET_CHANNEL_ID = 1456268381874421891  # Update this for each channel run
 BOT_APP_ID = 1485938016437407824
 SERVER_ID = "1432450864974532892"
 FILENAME = "older_bets.json"
@@ -36,15 +36,20 @@ def calculate_profit(status, units, odds):
 
 def is_old_format(embed):
     """
-    Old slips use embed.title (not embed.author) and have inline fields
-    named EVENT, WAGER, and ODDS.
+    Old slips have the bet title in embed.author.name and use inline fields
+    whose names contain EVENT, WAGER, and ODDS (possibly with emoji prefixes
+    like '🏆 EVENT', '💰 WAGER', '📈 ODDS').
     """
-    if not embed.title:
+    if not embed.author or not embed.author.name:
         return False
     if not embed.fields:
         return False
-    field_names = [f.name.upper().strip() for f in embed.fields]
-    return "EVENT" in field_names and "WAGER" in field_names and "ODDS" in field_names
+    field_names_upper = [f.name.upper() for f in embed.fields]
+    has_event = any("EVENT" in n for n in field_names_upper)
+    has_wager = any("WAGER" in n for n in field_names_upper)
+    has_odds  = any("ODDS"  in n for n in field_names_upper)
+    # Must have all three field columns AND no description (new format uses description)
+    return has_event and has_wager and has_odds and not embed.description
 
 @bot.event
 async def on_ready():
@@ -89,7 +94,7 @@ async def on_ready():
             continue
 
         try:
-            title = (embed.title or "").replace("**", "").strip()
+            title = (embed.author.name or "").replace("**", "").strip()
 
             # Extract username and sport from title like "booshh's Baseball Bet"
             title_match = re.match(r"^(.+?)'s (.+?) Bet$", title, re.IGNORECASE)

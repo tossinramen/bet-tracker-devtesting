@@ -1,0 +1,1216 @@
+{
+    "1432450864974532892_353361532803088394": [
+        {
+            "bet_id": "6f9dad89",
+            "sport": "Tennis",
+            "pick": "marozsan +3.5",
+            "units": 1.0,
+            "odds": 1.73,
+            "original_odds": 1.73,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-04-07T04:15:12.346660"
+        },
+        {
+            "bet_id": "50c5f27d",
+            "sport": "MMA",
+            "pick": "gamrot",
+            "units": 3.0,
+            "odds": 1.66,
+            "original_odds": 1.66,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-04-07T05:31:40.244246"
+        },
+        {
+            "bet_id": "fb6d54d8",
+            "sport": "MMA",
+            "pick": "suarez",
+            "units": 1.5,
+            "odds": 1.75,
+            "original_odds": 1.75,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-04-07T05:32:04.423633"
+        },
+        {
+            "bet_id": "2c33e780",
+            "sport": "MMA",
+            "pick": "cub swanson",
+            "units": 2.1,
+            "odds": 1.0,
+            "original_odds": 1.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-04-07T05:32:17.116447"
+        },
+        {
+            "bet_id": "b54d4326",
+            "sport": "MMA",
+            "pick": "gastelum+ radtke",
+            "units": 1.5,
+            "odds": 2.17,
+            "original_odds": 2.17,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-04-07T05:32:56.196863"
+        },
+        {
+            "bet_id": "7d7b1540",
+            "sport": "MMA",
+            "pick": "randy brown",
+            "units": 1.0,
+            "odds": 1.73,
+            "original_odds": 1.73,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-04-07T05:33:16.750803"
+        },
+        {
+            "bet_id": "d633da76",
+            "sport": "Tennis",
+            "pick": "Pliskova",
+            "units": 0.75,
+            "odds": 2.0,
+            "original_odds": 2.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-04-10T10:04:37.875611"
+        },
+        {
+            "bet_id": "aadf6604",
+            "sport": "Tennis",
+            "pick": "blanch",
+            "units": 1.5,
+            "odds": 1.72,
+            "original_odds": 1.72,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-04-10T16:13:10.922483"
+        },
+        {
+            "bet_id": "ef5d670b",
+            "sport": "CS2",
+            "pick": "`G2+ HOTU`",
+            "units": 1.5,
+            "odds": 1.65,
+            "original_odds": 1.65,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jakalo",
+            "timestamp": "2026-03-25T18:37:23.164000"
+        }
+    ],
+    "1432450864974532892_765151045755207690": [
+        {
+            "bet_id": "268af7a8",
+            "sport": "Baseball",
+            "pick": "Angels FT5 +0.5 + Phillies -1",
+            "units": 1.0,
+            "odds": 2.82,
+            "original_odds": 2.82,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Echo(LCS Expert, UCL Expert)",
+            "timestamp": "2026-03-31T21:59:41.337000"
+        }
+    ],
+    "1432450864974532892_228621565753950208": [
+        {
+            "bet_id": "bf0d2111",
+            "sport": "Dota",
+            "pick": "Enjoy boys m1",
+            "units": 0.5,
+            "odds": 5.2,
+            "original_odds": 5.2,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Zcriticus maximus homeless",
+            "timestamp": "2026-03-27T15:25:26.058000"
+        },
+        {
+            "bet_id": "292850e3",
+            "sport": "League",
+            "pick": "TT ml m1",
+            "units": 0.25,
+            "odds": 2.8,
+            "original_odds": 2.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Zcriticus  Wholesome moderator",
+            "timestamp": "2026-03-28T11:03:31.812000"
+        },
+        {
+            "bet_id": "1c45a26d",
+            "sport": "Val",
+            "pick": "Melser m3 + 2game m2",
+            "units": 2.0,
+            "odds": 1.65,
+            "original_odds": 1.65,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Zcriticus  Wholesome moderator",
+            "timestamp": "2026-03-29T21:16:14.897000"
+        },
+        {
+            "bet_id": "baddeb42",
+            "sport": "Dota",
+            "pick": "Rune eaters ml",
+            "units": 1.0,
+            "odds": 1.6,
+            "original_odds": 1.6,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Zcriticus  Wholesome moderator",
+            "timestamp": "2026-03-30T12:06:34.007000"
+        },
+        {
+            "bet_id": "4d0a836f",
+            "sport": "CS2",
+            "pick": "Fnatic m2",
+            "units": 1.2,
+            "odds": 1.7,
+            "original_odds": 1.7,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Zcriticus  Wholesome moderator",
+            "timestamp": "2026-03-31T17:24:17.542000"
+        },
+        {
+            "bet_id": "725ea797",
+            "sport": "League",
+            "pick": "DK cl ml m1",
+            "units": 1.0,
+            "odds": 2.9,
+            "original_odds": 2.9,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Zcriticus  Wholesome moderator",
+            "timestamp": "2026-04-06T10:59:58.016553"
+        }
+    ],
+    "1432450864974532892_132843395767992321": [
+        {
+            "bet_id": "a89c754a",
+            "sport": "CS2",
+            "pick": "3roundmax map1",
+            "units": 3.0,
+            "odds": 2.2,
+            "original_odds": 2.2,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Shun",
+            "timestamp": "2026-04-10T14:03:53.811593"
+        },
+        {
+            "bet_id": "489a9b91",
+            "sport": "Dota",
+            "pick": "`Mouz ml vs Pari map 1`",
+            "units": 1.0,
+            "odds": 2.8,
+            "original_odds": 2.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Shun",
+            "timestamp": "2026-03-25T12:24:04.354000"
+        },
+        {
+            "bet_id": "5a851ffb",
+            "sport": "Basketball",
+            "pick": "`Pacers +20.5 vs Lakers`",
+            "units": 0.5,
+            "odds": 1.81,
+            "original_odds": 1.81,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Shun",
+            "timestamp": "2026-03-26T01:00:32.009000"
+        },
+        {
+            "bet_id": "7b2a513f",
+            "sport": "Basketball",
+            "pick": "`Cavs ml vs heat`",
+            "units": 2.0,
+            "odds": 1.95,
+            "original_odds": 1.95,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Shun",
+            "timestamp": "2026-03-26T01:32:43.254000"
+        }
+    ],
+    "1432450864974532892_224917767474642946": [
+        {
+            "bet_id": "e061e265",
+            "sport": "Soccer",
+            "pick": "U19 croatia ml + U19 england ml",
+            "units": 1.0,
+            "odds": 1.66,
+            "original_odds": 1.66,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-03-28T11:39:09.156000"
+        },
+        {
+            "bet_id": "e9ab5a4b",
+            "sport": "Dota",
+            "pick": "tundra ml m1",
+            "units": 1.0,
+            "odds": 1.53,
+            "original_odds": 1.53,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-03-28T15:57:46.787000"
+        },
+        {
+            "bet_id": "60146827",
+            "sport": "Soccer",
+            "pick": "U21 Bulgaria ml",
+            "units": 1.0,
+            "odds": 2.0,
+            "original_odds": 2.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-03-31T17:23:09.881000"
+        },
+        {
+            "bet_id": "53dd4bd2",
+            "sport": "Soccer",
+            "pick": "Netherlands ML",
+            "units": 1.0,
+            "odds": 1.53,
+            "original_odds": 1.53,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-03-31T18:36:58.417000"
+        },
+        {
+            "bet_id": "9d89aac4",
+            "sport": "Soccer",
+            "pick": "haiti vs iceland draw + U21 portugal ML",
+            "units": 1.0,
+            "odds": 2.75,
+            "original_odds": 2.75,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-03-31T18:48:09.651000"
+        },
+        {
+            "bet_id": "b7ace530",
+            "sport": "Soccer",
+            "pick": "Vilanova Geltru ML",
+            "units": 2.0,
+            "odds": 2.37,
+            "original_odds": 2.37,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-04-02T19:48:05.531000"
+        },
+        {
+            "bet_id": "6f8c25c6",
+            "sport": "League",
+            "pick": "KT ML M2",
+            "units": 1.0,
+            "odds": 3.75,
+            "original_odds": 3.75,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-04-03T09:09:32.079000"
+        },
+        {
+            "bet_id": "1c850a2c",
+            "sport": "Val",
+            "pick": "TH -2.5 M2",
+            "units": 1.0,
+            "odds": 1.72,
+            "original_odds": 1.72,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-04-03T16:23:42.206165"
+        },
+        {
+            "bet_id": "88e6795b",
+            "sport": "Soccer",
+            "pick": "Barca Athletico DRAW",
+            "units": 1.0,
+            "odds": 2.05,
+            "original_odds": 2.05,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-04-04T20:47:56.526590"
+        },
+        {
+            "bet_id": "b605aa66",
+            "sport": "Soccer",
+            "pick": "NUKE LOCK AND LOADED: PSG ML (PLS PAY FOR MY HOLIDAY)",
+            "units": 5.0,
+            "odds": 2.5,
+            "original_odds": 2.5,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Uncle Mahmud (Aspiring #10)",
+            "timestamp": "2026-04-10T10:01:05.136423"
+        }
+    ],
+    "1432450864974532892_121126969919275010": [
+        {
+            "bet_id": "188d3fd7",
+            "sport": "CS2",
+            "pick": "100T -3.5 M3",
+            "units": 1.0,
+            "odds": 1.8,
+            "original_odds": 1.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Bankaei",
+            "timestamp": "2026-04-02T09:34:17.002000"
+        }
+    ],
+    "1432450864974532892_1361081603866099883": [
+        {
+            "bet_id": "a26f072e",
+            "sport": "Dota",
+            "pick": "Team yandex",
+            "units": 2.0,
+            "odds": 1.67,
+            "original_odds": 1.67,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Tayfun (Linux goat)",
+            "timestamp": "2026-03-26T10:47:48.025000"
+        }
+    ],
+    "1432450864974532892_1375763136648446013": [
+        {
+            "bet_id": "01170065",
+            "sport": "Basketball",
+            "pick": "Euroleuage / FC Barcelona win & u174.5 points",
+            "units": 1.0,
+            "odds": 2.3,
+            "original_odds": 2.3,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-03-27T19:19:05.240000"
+        },
+        {
+            "bet_id": "7f238464",
+            "sport": "League",
+            "pick": "Solary +1.5",
+            "units": 10.0,
+            "odds": 1.42,
+            "original_odds": 1.42,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-03-31T14:30:32.751000"
+        },
+        {
+            "bet_id": "dc386ff3",
+            "sport": "Soccer",
+            "pick": "Turkey to win",
+            "units": 2.5,
+            "odds": 2.04,
+            "original_odds": 2.04,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-03-31T14:36:48.869000"
+        },
+        {
+            "bet_id": "6dc40423",
+            "sport": "Mixed Parlay",
+            "pick": "Norway vs switzerland BTTS, o4.5 cards, o9.5 corners",
+            "units": 1.0,
+            "odds": 14.82,
+            "original_odds": 14.82,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-03-31T14:41:12.123000"
+        },
+        {
+            "bet_id": "c01e2c85",
+            "sport": "League",
+            "pick": "JDG o12.5 turrets m2",
+            "units": 2.5,
+            "odds": 2.25,
+            "original_odds": 2.25,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-04-05T10:13:15.659509"
+        },
+        {
+            "bet_id": "fb7a3316",
+            "sport": "League",
+            "pick": "DK FT5 m2",
+            "units": 5.0,
+            "odds": 2.2,
+            "original_odds": 2.2,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-04-08T09:04:46.203671"
+        },
+        {
+            "bet_id": "26e8ef92",
+            "sport": "League",
+            "pick": "DK FT5 m2",
+            "units": 1.5,
+            "odds": 3.0,
+            "original_odds": 3.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-04-08T09:09:05.396869"
+        },
+        {
+            "bet_id": "65545567",
+            "sport": "Tennis",
+            "pick": "BERGZ 3-6 set 2",
+            "units": 2.0,
+            "odds": 3.6,
+            "original_odds": 3.6,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-04-08T10:02:26.365673"
+        },
+        {
+            "bet_id": "c899398c",
+            "sport": "League",
+            "pick": "NIP ml",
+            "units": 3.0,
+            "odds": 7.5,
+            "original_odds": 7.5,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-04-08T11:36:11.285622"
+        },
+        {
+            "bet_id": "5c212663",
+            "sport": "League",
+            "pick": "TOP vs WE o12.5 turrets",
+            "units": 2.5,
+            "odds": 2.7,
+            "original_odds": 2.7,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-04-08T13:42:04.767633"
+        },
+        {
+            "bet_id": "4c1cea0e",
+            "sport": "League",
+            "pick": "BLG vs JDG - o23.5",
+            "units": 5.0,
+            "odds": 1.6,
+            "original_odds": 1.6,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Cavilocks (ALWAYS fade jayce)",
+            "timestamp": "2026-04-10T12:32:07.233118"
+        }
+    ],
+    "1432450864974532892_1100813001843560459": [
+        {
+            "bet_id": "5357d08c",
+            "sport": "Val",
+            "pick": "M8 -2.5 M2",
+            "units": 1.5,
+            "odds": 2.02,
+            "original_odds": 2.02,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "hiki.",
+            "timestamp": "2026-04-10T19:13:22.238550"
+        },
+        {
+            "bet_id": "b4e5b617",
+            "sport": "Val",
+            "pick": "M8 -4.5 M2",
+            "units": 0.5,
+            "odds": 2.8,
+            "original_odds": 2.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "hiki.",
+            "timestamp": "2026-04-10T19:13:44.519867"
+        },
+        {
+            "bet_id": "18f8a2f2",
+            "sport": "Val",
+            "pick": "M8 to win first half M2",
+            "units": 0.3,
+            "odds": 1.9,
+            "original_odds": 1.9,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "hiki.",
+            "timestamp": "2026-04-10T19:20:22.651531"
+        }
+    ],
+    "1432450864974532892_248816298434363393": [
+        {
+            "bet_id": "5abf2c6d",
+            "sport": "Val",
+            "pick": "M8s -1.5",
+            "units": 10.0,
+            "odds": 1.72,
+            "original_odds": -138.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Poopstink",
+            "timestamp": "2026-04-10T19:08:41.142292"
+        }
+    ],
+    "1432450864974532892_468369483036098568": [
+        {
+            "bet_id": "1ff81169",
+            "sport": "CS2",
+            "pick": "Alliance to win vs M80",
+            "units": 6.0,
+            "odds": 1.65,
+            "original_odds": 1.65,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Prediction markets analyst",
+            "timestamp": "2026-04-02T11:26:03.263000"
+        },
+        {
+            "bet_id": "37a418b2",
+            "sport": "Val",
+            "pick": "BLG to win vs TYLOO",
+            "units": 4.0,
+            "odds": 2.08,
+            "original_odds": 2.08,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Prediction markets analyst",
+            "timestamp": "2026-04-02T12:29:55.573000"
+        }
+    ],
+    "1432450864974532892_343248841534865410": [
+        {
+            "bet_id": "f451cc9e",
+            "sport": "Dota",
+            "pick": "Nigma m1",
+            "units": 0.25,
+            "odds": 3.22,
+            "original_odds": 222.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Revived",
+            "timestamp": "2026-04-09T12:15:41.751379"
+        },
+        {
+            "bet_id": "93c37c7e",
+            "sport": "CS2",
+            "pick": "Astralis MW",
+            "units": 1.0,
+            "odds": 1.52,
+            "original_odds": -192.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Revived",
+            "timestamp": "2026-04-10T14:08:40.242695"
+        },
+        {
+            "bet_id": "b2a342bf",
+            "sport": "CS2",
+            "pick": "FUT mw",
+            "units": 1.0,
+            "odds": 1.68,
+            "original_odds": -147.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Revived",
+            "timestamp": "2026-04-10T14:31:24.803325"
+        }
+    ],
+    "1432450864974532892_213114196060143618": [
+        {
+            "bet_id": "56a244bb",
+            "sport": "Basketball",
+            "pick": "Buck ML v Nets",
+            "units": 10.0,
+            "odds": 1.22,
+            "original_odds": 1.22,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "NEVER CASH OUT",
+            "timestamp": "2026-04-10T11:06:19.272409"
+        },
+        {
+            "bet_id": "3befe165",
+            "sport": "Basketball",
+            "pick": "Grizzlies ML",
+            "units": 1.5,
+            "odds": 2.5,
+            "original_odds": 2.5,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "NEVER CASH OUT",
+            "timestamp": "2026-04-10T11:08:22.507255"
+        }
+    ],
+    "1432450864974532892_257552469851242497": [
+        {
+            "bet_id": "265f5539",
+            "sport": "Baseball",
+            "pick": "Michael Busch Under 0.5 Hits",
+            "units": 0.8,
+            "odds": 2.28,
+            "original_odds": 128.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "JRoo",
+            "timestamp": "2026-04-10T18:06:09.037605"
+        }
+    ],
+    "1432450864974532892_1257602205750661120": [
+        {
+            "bet_id": "ac694552",
+            "sport": "Tennis",
+            "pick": "Sinner vs Tiafoe - Frances Tiafoe Under 4.5 Aces",
+            "units": 1.0,
+            "odds": 1.9,
+            "original_odds": 1.9,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "acir",
+            "timestamp": "2026-03-26T16:24:33.895000"
+        },
+        {
+            "bet_id": "fdddbe78",
+            "sport": "Baseball",
+            "pick": "Tigers O8 + Angels O9",
+            "units": 1.0,
+            "odds": 2.33,
+            "original_odds": 2.33,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "acir",
+            "timestamp": "2026-03-30T18:26:25.931000"
+        },
+        {
+            "bet_id": "0ad43b75",
+            "sport": "Baseball",
+            "pick": "Padres @ Pirates - Pirates ML",
+            "units": 2.0,
+            "odds": 1.7,
+            "original_odds": -142.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "acir",
+            "timestamp": "2026-04-06T18:11:34.142872"
+        },
+        {
+            "bet_id": "66f24ad8",
+            "sport": "Baseball",
+            "pick": "Brewers @ Red Sox - Brewers ML",
+            "units": 1.0,
+            "odds": 1.83,
+            "original_odds": -120.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "acir",
+            "timestamp": "2026-04-06T18:13:48.785518"
+        },
+        {
+            "bet_id": "d3583991",
+            "sport": "Baseball",
+            "pick": "Braves ML + Sharks ML",
+            "units": 1.0,
+            "odds": 2.47,
+            "original_odds": 147.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "acir",
+            "timestamp": "2026-04-06T18:16:01.119723"
+        },
+        {
+            "bet_id": "ab88633e",
+            "sport": "Baseball",
+            "pick": "Twins @ Tigers - u7.5",
+            "units": 1.0,
+            "odds": 1.74,
+            "original_odds": -135.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "acir",
+            "timestamp": "2026-04-06T22:10:21.719081"
+        },
+        {
+            "bet_id": "e0aa2134",
+            "sport": "Baseball",
+            "pick": "Mariners @ Rangers - O7.5",
+            "units": 1.0,
+            "odds": 1.77,
+            "original_odds": -130.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "acir",
+            "timestamp": "2026-04-06T22:15:08.521100"
+        },
+        {
+            "bet_id": "cac999a1",
+            "sport": "Baseball",
+            "pick": "Braves @ Angels - Sale O7.5 K",
+            "units": 2.0,
+            "odds": 1.62,
+            "original_odds": -160.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "acir",
+            "timestamp": "2026-04-06T22:25:42.491235"
+        }
+    ],
+    "1432450864974532892_196858028568477696": [
+        {
+            "bet_id": "32854621",
+            "sport": "Val",
+            "pick": "nova map 1x2",
+            "units": 3.0,
+            "odds": 1.63,
+            "original_odds": 1.63,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Ryc(free 200$ bitcoin in Bio)",
+            "timestamp": "2026-04-10T09:14:30.762024"
+        },
+        {
+            "bet_id": "c78ee7c7",
+            "sport": "Val",
+            "pick": "KC map 2",
+            "units": 3.0,
+            "odds": 2.48,
+            "original_odds": 2.48,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Ryc(free 200$ bitcoin in Bio)",
+            "timestamp": "2026-04-10T19:12:24.349333"
+        }
+    ],
+    "1432450864974532892_1151133369770451016": [
+        {
+            "bet_id": "27f38f92",
+            "sport": "ELeaguetronic Sports",
+            "pick": "ap bren ml against tw",
+            "units": 6.0,
+            "odds": 2.3,
+            "original_odds": 2.3,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "carti",
+            "timestamp": "2026-04-10T08:08:53.966966"
+        }
+    ],
+    "1432450864974532892_1101668750014562396": [
+        {
+            "bet_id": "8b160cce",
+            "sport": "Kalshi/Poly Trades",
+            "pick": "sweet bonanza bonus buy",
+            "units": 10.0,
+            "odds": 6.0,
+            "original_odds": 6.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "\ud83d\ude3f",
+            "timestamp": "2026-04-03T09:36:51.548000"
+        },
+        {
+            "bet_id": "f8b14583",
+            "sport": "League",
+            "pick": "solary m1",
+            "units": 3.0,
+            "odds": 1.34,
+            "original_odds": 1.34,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "\ud83d\ude3fodo",
+            "timestamp": "2026-04-10T18:51:03.355413"
+        }
+    ],
+    "1432450864974532892_677361250048409602": [
+        {
+            "bet_id": "f12b3a21",
+            "sport": "MMA",
+            "pick": "Navajo + Chase",
+            "units": 1.0,
+            "odds": 1.65,
+            "original_odds": 1.65,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Vegas Agent",
+            "timestamp": "2026-03-28T05:31:42.230000"
+        }
+    ],
+    "1432450864974532892_126120484172595200": [
+        {
+            "bet_id": "fe460166",
+            "sport": "League",
+            "pick": "KT ML map 2",
+            "units": 2.0,
+            "odds": 1.58,
+            "original_odds": 1.58,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jordan (KOG Expert)",
+            "timestamp": "2026-03-30T06:08:38.051000"
+        },
+        {
+            "bet_id": "f03ae5c9",
+            "sport": "Tennis",
+            "pick": "kenin set",
+            "units": 1.5,
+            "odds": 1.7,
+            "original_odds": 1.7,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jordan (KOG Expert)",
+            "timestamp": "2026-04-02T23:34:32.371000"
+        },
+        {
+            "bet_id": "5d48593d",
+            "sport": "League",
+            "pick": "GenG vs KT Map U30",
+            "units": 1.5,
+            "odds": 1.82,
+            "original_odds": 1.82,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jordan (KOG Expert)",
+            "timestamp": "2026-04-03T10:02:05.164000"
+        },
+        {
+            "bet_id": "72bf4696",
+            "sport": "League",
+            "pick": "DSG VS SEN MAP 1 O33",
+            "units": 2.0,
+            "odds": 1.78,
+            "original_odds": 1.78,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jordan (KOG Expert)",
+            "timestamp": "2026-04-04T22:59:02.758640"
+        }
+    ],
+    "1432450864974532892_889131526816686140": [
+        {
+            "bet_id": "515088c8",
+            "sport": "Val",
+            "pick": "Navi map 1",
+            "units": 4.0,
+            "odds": 2.8,
+            "original_odds": 2.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "pykemilionario",
+            "timestamp": "2026-04-03T15:38:32.865646"
+        }
+    ],
+    "1432450864974532892_1444978449415536653": [
+        {
+            "bet_id": "836381f0",
+            "sport": "League",
+            "pick": "Skillcamp vs Vitality.Bee | SC",
+            "units": 1.0,
+            "odds": 1.6,
+            "original_odds": 1.6,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Simas",
+            "timestamp": "2026-04-08T16:21:02.227274"
+        },
+        {
+            "bet_id": "25729f41",
+            "sport": "League",
+            "pick": "Eintracht Frankfurt vs E WIE EINFACH E-SPORTS | Frank noobs",
+            "units": 0.5,
+            "odds": 7.5,
+            "original_odds": 7.5,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Simas",
+            "timestamp": "2026-04-08T16:28:03.390318"
+        },
+        {
+            "bet_id": "239d1a79",
+            "sport": "League",
+            "pick": "Skillcamp vs Vitality.Bee | SC",
+            "units": 0.5,
+            "odds": 2.5,
+            "original_odds": 2.5,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Simas",
+            "timestamp": "2026-04-08T16:39:58.174659"
+        },
+        {
+            "bet_id": "32919010",
+            "sport": "League",
+            "pick": "JD Gaming vs Anyone's Legend | jdg  map2",
+            "units": 1.0,
+            "odds": 1.72,
+            "original_odds": 1.72,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Simas",
+            "timestamp": "2026-04-10T13:30:11.590347"
+        },
+        {
+            "bet_id": "0e563a64",
+            "sport": "League",
+            "pick": "JD Gaming vs Anyone's Legend  | JDG map2",
+            "units": 1.0,
+            "odds": 2.05,
+            "original_odds": 2.05,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Simas",
+            "timestamp": "2026-04-10T13:30:27.263363"
+        }
+    ],
+    "1432450864974532892_831659006170234881": [
+        {
+            "bet_id": "eed429ca",
+            "sport": "CS2",
+            "pick": "vita -1.5",
+            "units": 1.0,
+            "odds": 1.6,
+            "original_odds": 1.6,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "EndlessCalamity",
+            "timestamp": "2026-03-28T11:06:01.777000"
+        }
+    ],
+    "1432450864974532892_219496582133972994": [
+        {
+            "bet_id": "fe3a4569",
+            "sport": "League",
+            "pick": "FNC vs GX FNC Win",
+            "units": 10.0,
+            "odds": 2.1,
+            "original_odds": 2.1,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "MinMaxMaxi",
+            "timestamp": "2026-03-28T12:55:25.694000"
+        },
+        {
+            "bet_id": "b71da044",
+            "sport": "League",
+            "pick": "FNC vs GX FNC ML Map3",
+            "units": 5.0,
+            "odds": 2.05,
+            "original_odds": 2.05,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "MinMaxMaxi",
+            "timestamp": "2026-03-28T14:52:38.760000"
+        }
+    ],
+    "1432450864974532892_284108584630091786": [
+        {
+            "bet_id": "caf5b160",
+            "sport": "Basketball",
+            "pick": "Purdue ML",
+            "units": 2.0,
+            "odds": 1.9,
+            "original_odds": 1.9,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "UPay4MyWeed",
+            "timestamp": "2026-03-29T01:52:42.378000"
+        },
+        {
+            "bet_id": "6d174ad8",
+            "sport": "Tennis",
+            "pick": "`Pegula ML`",
+            "units": 4.0,
+            "odds": 1.6,
+            "original_odds": 1.6,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "UPay4MyWeed",
+            "timestamp": "2026-03-25T17:22:10.729000"
+        },
+        {
+            "bet_id": "836fd7c8",
+            "sport": "League",
+            "pick": "`Solary -1.5`",
+            "units": 2.0,
+            "odds": 1.65,
+            "original_odds": 1.65,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "UPay4MyWeed",
+            "timestamp": "2026-03-25T17:43:53.068000"
+        }
+    ],
+    "1432450864974532892_701722559615598654": [
+        {
+            "bet_id": "b3bd9bf7",
+            "sport": "Dota",
+            "pick": "Navi -1.5",
+            "units": 1.0,
+            "odds": 1.78,
+            "original_odds": 1.78,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "iroha",
+            "timestamp": "2026-04-02T16:48:37.869000"
+        },
+        {
+            "bet_id": "3bff57bf",
+            "sport": "Basketball",
+            "pick": "Zaccharie Risacher Points  O6.5",
+            "units": 3.0,
+            "odds": 1.78,
+            "original_odds": 1.78,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "iroha",
+            "timestamp": "2026-04-03T16:00:20.331372"
+        }
+    ],
+    "1432450864974532892_132055317252014080": [
+        {
+            "bet_id": "2ae60ca7",
+            "sport": "Basketball",
+            "pick": "lac-5.5",
+            "units": 10.0,
+            "odds": 1.97,
+            "original_odds": 1.97,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Solana to 2k",
+            "timestamp": "2026-03-31T23:22:50.771000"
+        },
+        {
+            "bet_id": "24fa846b",
+            "sport": "Basketball",
+            "pick": "LAL-2.5 LAC-5.5",
+            "units": 10.0,
+            "odds": 3.5,
+            "original_odds": 3.5,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Solana to 2k",
+            "timestamp": "2026-04-01T03:13:56.005000"
+        }
+    ],
+    "1432450864974532892_755821107180994663": [
+        {
+            "bet_id": "526ac8d6",
+            "sport": "Val",
+            "pick": "Karmine corp ml",
+            "units": 10.0,
+            "odds": 2.8,
+            "original_odds": 2.8,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "bigDlemon",
+            "timestamp": "2026-03-29T19:57:30.272000"
+        },
+        {
+            "bet_id": "c3345985",
+            "sport": "Soccer",
+            "pick": "barcelona match 1st half under 1.5",
+            "units": 2.0,
+            "odds": 1.75,
+            "original_odds": 1.75,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "bigDlemon",
+            "timestamp": "2026-04-04T18:19:12.970947"
+        }
+    ],
+    "1432450864974532892_1235805026501525570": [
+        {
+            "bet_id": "64394d3c",
+            "sport": "Mixed Parlay",
+            "pick": "Misa ML + Big ML+ Suns +9.5 + Cavs +9.5",
+            "units": 1.0,
+            "odds": 4.24,
+            "original_odds": 4.24,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "GL",
+            "timestamp": "2026-03-31T14:53:31.961000"
+        },
+        {
+            "bet_id": "d2dfb8fc",
+            "sport": "CS2",
+            "pick": "Passion UA ML",
+            "units": 1.2,
+            "odds": 1.72,
+            "original_odds": 1.72,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "GL",
+            "timestamp": "2026-03-31T16:56:11.441000"
+        },
+        {
+            "bet_id": "9765dd87",
+            "sport": "Basketball",
+            "pick": "Cavs ML",
+            "units": 2.0,
+            "odds": 2.0,
+            "original_odds": 2.0,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "GL",
+            "timestamp": "2026-03-31T20:43:51.918000"
+        }
+    ],
+    "1432450864974532892_unresolved_wabi sabi": [
+        {
+            "bet_id": "dbda5f10",
+            "sport": "Basketball",
+            "pick": "`Crvena Zvezda`",
+            "units": 5.0,
+            "odds": 1.6,
+            "original_odds": 1.6,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Wabi sabi",
+            "timestamp": "2026-03-25T19:51:52.367000"
+        }
+    ],
+    "1432450864974532892_unresolved_jordan (kog expert)": [
+        {
+            "bet_id": "37497d41",
+            "sport": "Basketball",
+            "pick": "`SK Knights ML`",
+            "units": 1.5,
+            "odds": 1.75,
+            "original_odds": 1.75,
+            "status": "Pending",
+            "profit": 0.0,
+            "user_name": "Jordan (KOG Expert)",
+            "timestamp": "2026-03-25T10:03:18.796000"
+        }
+    ]
+}

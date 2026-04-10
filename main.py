@@ -434,7 +434,10 @@ async def bet(interaction: discord.Interaction, sport: Choice[str], pick: str, u
                 icon_url=interaction.user.display_avatar.url
             )
             dm_embed.set_footer(text=f"ID: {bet_id}")
-            await tailer.send(embed=dm_embed)
+            await tailer.send(
+                content=f"📣 **{interaction.user.display_name}** just posted a **{sport.value}** bet!",
+                embed=dm_embed
+            )
         except Exception:
             pass
 

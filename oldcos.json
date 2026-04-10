@@ -1,0 +1,354 @@
+{
+    "1432450864974532892_228621565753950208": [
+        {
+            "bet_id": "e7e65bfa",
+            "pick": "GaiminG ML",
+            "method": "1.0u Payout",
+            "profit": 0.0,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-26T16:00:01.985000"
+        },
+        {
+            "bet_id": "292850e3",
+            "pick": "TT ml m1",
+            "method": "0.45u Payout",
+            "profit": 0.2,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-28T11:18:31.501000"
+        },
+        {
+            "bet_id": "1c45a26d",
+            "pick": "Melser m3 + 2game m2",
+            "method": "1.81u Payout",
+            "profit": -0.19,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-29T21:55:28.976000"
+        },
+        {
+            "bet_id": "baddeb42",
+            "pick": "Rune eaters ml",
+            "method": "1.3u Payout",
+            "profit": 0.3,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-30T12:37:34.097000"
+        },
+        {
+            "bet_id": "4d0a836f",
+            "pick": "Fnatic m2",
+            "method": "1.4u Payout",
+            "profit": 0.2,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-31T17:33:13.529000"
+        },
+        {
+            "bet_id": "b2c30503",
+            "pick": "Eyeballers ml m1",
+            "method": "1.5u Payout",
+            "profit": 0.5,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-09T11:07:43.298000"
+        },
+        {
+            "bet_id": "071df3cd",
+            "pick": "Astralis -1.5",
+            "method": "0.6u Payout",
+            "profit": 0.1,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-10T15:08:23.487000"
+        }
+    ],
+    "1432450864974532892_132843395767992321": [
+        {
+            "bet_id": "5a851ffb",
+            "pick": "Pacers +20.5 vs Lakers",
+            "method": "1.0u Payout",
+            "profit": 0.5,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-26T01:17:31.894000"
+        }
+    ],
+    "1432450864974532892_196858028568477696": [
+        {
+            "bet_id": "87e67a52",
+            "pick": "lgd map 2",
+            "method": "1.68 Odds",
+            "profit": 4.76,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-27T11:15:27.207000"
+        },
+        {
+            "bet_id": "d29d087c",
+            "pick": "elevate ml",
+            "method": "1.0 Odds",
+            "profit": 0.0,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-28T01:09:55.801000"
+        },
+        {
+            "bet_id": "225b2666",
+            "pick": "navi ml",
+            "method": "0.4 Odds",
+            "profit": -1.8,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-28T21:16:50.605000"
+        },
+        {
+            "bet_id": "f27f0bdc",
+            "pick": "NS MAP 2",
+            "method": "0.78 Odds",
+            "profit": -0.44,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-30T10:38:24.382000"
+        },
+        {
+            "bet_id": "40382613",
+            "pick": "pigeons ml",
+            "method": "0.74 Odds",
+            "profit": -1.3,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-31T01:08:12.687000"
+        },
+        {
+            "bet_id": "b6a41553",
+            "pick": "ag map 2 1x2",
+            "method": "0.5 Odds",
+            "profit": -1.0,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-31T10:33:49.436000"
+        },
+        {
+            "bet_id": "89221b6e",
+            "pick": "heroic map 3",
+            "method": "0.45 Odds",
+            "profit": -2.2,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-01T14:31:29.278000"
+        },
+        {
+            "bet_id": "d78a30f1",
+            "pick": "FOOTLOCKERFINEST ML",
+            "method": "0.8 Odds",
+            "profit": -0.3,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-01T23:28:56.686000"
+        },
+        {
+            "bet_id": "797b5607",
+            "pick": "DSG MAP 2",
+            "method": "1.25 Odds",
+            "profit": 0.5,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-05T00:13:30.997000"
+        },
+        {
+            "bet_id": "a4412b26",
+            "pick": "rrq map 1",
+            "method": "0.65 Odds",
+            "profit": -0.52,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-05T10:59:56.018000"
+        },
+        {
+            "bet_id": "bdefc2b7",
+            "pick": "murash gaming map 1",
+            "method": "0.9 Odds",
+            "profit": -0.3,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-06T11:34:15.051000"
+        },
+        {
+            "bet_id": "f040bada",
+            "pick": "pigeons map 1",
+            "method": "0.45 Odds",
+            "profit": -1.1,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-06T22:52:52.555000"
+        },
+        {
+            "bet_id": "d501341b",
+            "pick": "pigeons map 1",
+            "method": "0.45 Odds",
+            "profit": -1.38,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-06T22:53:04.615000"
+        },
+        {
+            "bet_id": "0da5daf4",
+            "pick": "pigeons map 1",
+            "method": "0.45 Odds",
+            "profit": -1.65,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-06T22:53:12.550000"
+        },
+        {
+            "bet_id": "662ecaba",
+            "pick": "nbg map 1",
+            "method": "78.0 Odds",
+            "profit": 385.0,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-06T23:00:07.939000"
+        },
+        {
+            "bet_id": "5024d338",
+            "pick": "dfm map 1",
+            "method": "0.3 Odds",
+            "profit": -2.8,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-10T08:41:25.296000"
+        }
+    ],
+    "1432450864974532892_224917767474642946": [
+        {
+            "bet_id": "f9e460d2",
+            "pick": "U19 khazakstan or draw",
+            "method": "0.68u Payout",
+            "profit": -0.32,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-28T09:35:19.548000"
+        },
+        {
+            "bet_id": "e061e265",
+            "pick": "U19 croatia ml + U19 england ml",
+            "method": "0.63u Payout",
+            "profit": -0.37,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-28T13:08:26.719000"
+        },
+        {
+            "bet_id": "60146827",
+            "pick": "U21 Bulgaria ml",
+            "method": "0.3u Payout",
+            "profit": -0.7,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-31T17:44:22.737000"
+        },
+        {
+            "bet_id": "9d89aac4",
+            "pick": "haiti vs iceland draw + U21 portugal ML",
+            "method": "0.45u Payout",
+            "profit": -0.55,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-31T19:01:08.843000"
+        },
+        {
+            "bet_id": "53dd4bd2",
+            "pick": "Netherlands ML",
+            "method": "0.35u Payout",
+            "profit": -0.65,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-31T19:17:15.429000"
+        },
+        {
+            "bet_id": "b7ace530",
+            "pick": "Vilanova Geltru ML",
+            "method": "0.7u Payout",
+            "profit": -1.3,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-02T20:07:59.037000"
+        },
+        {
+            "bet_id": "88e6795b",
+            "pick": "Barca Athletico DRAW",
+            "method": "0.1u Payout",
+            "profit": -0.9,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-04T20:53:42.465000"
+        }
+    ],
+    "1432450864974532892_213114196060143618": [
+        {
+            "bet_id": "7071dfdb",
+            "pick": "Kawhi 25+ Garland 15+",
+            "method": "-0.3u Payout",
+            "profit": -1.3,
+            "status": "Cashed Out",
+            "timestamp": "2026-03-29T21:20:21.353000"
+        },
+        {
+            "bet_id": "1ea7879e",
+            "pick": "RJ (retarded jit) Barrett 20+ pts Hornets ML",
+            "method": "1.79 Odds",
+            "profit": 0.95,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-01T01:48:39.468000"
+        },
+        {
+            "bet_id": "7fd6add6",
+            "pick": "Flagg 20+ clingan 10+ rebounds",
+            "method": "0.5 Odds",
+            "profit": -0.5,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-01T02:10:47.967000"
+        },
+        {
+            "bet_id": "39e85ae8",
+            "pick": "Illinois ML vs Uconn",
+            "method": "-0.9u Payout",
+            "profit": -2.9,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-04T23:13:02.315000"
+        },
+        {
+            "bet_id": "af1f605d",
+            "pick": "IG m2 ml vs NIP",
+            "method": "0.5 Odds",
+            "profit": -1.5,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-08T10:38:26.475000"
+        },
+        {
+            "bet_id": "aa738de8",
+            "pick": "SGA 25+ Kawhi 20+ Thunder ML",
+            "method": "0.7 Odds",
+            "profit": -0.45,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-09T03:03:37.253000"
+        },
+        {
+            "bet_id": "cbf7c394",
+            "pick": "T1 m2 ML",
+            "method": "0.825 Odds",
+            "profit": -0.26,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-10T09:15:11.488000"
+        }
+    ],
+    "1432450864974532892_468369483036098568": [
+        {
+            "bet_id": "37a418b2",
+            "pick": "BLG to win vs TYLOO",
+            "method": "3.4 Odds",
+            "profit": 9.6,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-02T13:59:53.599000"
+        },
+        {
+            "bet_id": "1ff81169",
+            "pick": "Alliance to win vs M80",
+            "method": "0.85 Odds",
+            "profit": -0.9,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-02T14:58:37.358000"
+        }
+    ],
+    "1432450864974532892_126120484172595200": [
+        {
+            "bet_id": "f03ae5c9",
+            "pick": "kenin set",
+            "method": "93.11u Payout",
+            "profit": 91.61,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-02T23:51:09.977000"
+        }
+    ],
+    "1432450864974532892_1375763136648446013": [
+        {
+            "bet_id": "a97dbe88",
+            "pick": "NS M2",
+            "method": "4.0u Payout",
+            "profit": 3.0,
+            "status": "Cashed Out",
+            "timestamp": "2026-04-09T13:04:57.124000"
+        }
+    ]
+}

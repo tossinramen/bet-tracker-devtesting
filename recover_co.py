@@ -14,7 +14,7 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # --- CONFIGURATION ---
-TARGET_CHANNEL_ID = 1432451888451686551  # Update per channel
+TARGET_CHANNEL_ID = 1486023440728330340 # Update per channel
 BOT_APP_ID        = 1485938016437407824
 SERVER_ID         = "1432450864974532892"
 FILENAME          = "oldcos.json"

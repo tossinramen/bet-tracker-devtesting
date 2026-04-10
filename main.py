@@ -22,7 +22,8 @@ SPORTS_LIST = [
     "League", "Basketball", "CS2", "Val", "Dota", "Tennis", "MMA", 
     "Cricket", "Baseball", "Soccer", "Hockey", "Kalshi/Poly Trades", 
     "COD", "Table Tennis", "Badminton", "Volleyball", "Rugby", 
-    "Boxing", "Darts", "Snooker", "Electronic Sports", "Mixed Parlay"
+    "Boxing", "Darts", "Snooker", "Electronic Sports", "Mixed Parlay",
+    "Golf", "Rainbow 6"
 ]
 
 # --- DATA HELPERS ---

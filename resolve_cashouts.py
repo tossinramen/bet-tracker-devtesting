@@ -18,17 +18,17 @@ still_pending  = 0
 resolved_pending = {}
 
 for user_key, user_bets in pending.items():
-    resolved_pending[user_key] = []
     for bet in user_bets:
         co = co_lookup.get(bet["bet_id"])
         if co:
             updated = dict(bet)
             updated["status"] = "Cashed Out"
             updated["profit"] = co["profit"]
+            if user_key not in resolved_pending:
+                resolved_pending[user_key] = []
             resolved_pending[user_key].append(updated)
             resolved_count += 1
         else:
-            resolved_pending[user_key].append(dict(bet))
             still_pending += 1
 
 with open("resolved_pending.json", "w") as f:
@@ -36,5 +36,5 @@ with open("resolved_pending.json", "w") as f:
 
 print(f"Done!")
 print(f"  Resolved as Cashed Out : {resolved_count}")
-print(f"  Still Pending          : {still_pending}")
+print(f"  Still Pending (skipped): {still_pending}")
 print(f"Output saved to resolved_pending.json")
